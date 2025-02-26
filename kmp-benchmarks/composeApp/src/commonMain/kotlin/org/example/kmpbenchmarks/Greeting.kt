@@ -1,4 +1,4 @@
-package com.example.benchmarkapp
+package org.example.kmpbenchmarks
 
 class Greeting {
     private val platform = getPlatform()

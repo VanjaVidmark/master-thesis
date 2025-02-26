@@ -1,4 +1,4 @@
-rootProject.name = "KotlinProject"
+rootProject.name = "kmp-benchmarks"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -29,3 +29,4 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":geolocationKmp")

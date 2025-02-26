@@ -1,4 +1,4 @@
-package com.example.benchmarkapp
+package org.example.kmpbenchmarks
 
 import androidx.compose.ui.window.ComposeUIViewController
 
