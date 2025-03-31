@@ -19,7 +19,7 @@ fun App() {
     val locationProvider = remember { getLocationProvider() }
     val benchmark = remember { GeolocationBenchmark() }
     var locationText by remember { mutableStateOf("Press the button to get location") }
-    var benchmarkText by remember { mutableStateOf("Press the button to get location") }
+    var benchmarkText by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope() // needed to run suspend function
 
     suspend fun runGeolocation(): String? {
