@@ -1,4 +1,5 @@
 package org.example.kmpbenchmarks
 
-class BenchmarkRunner {
+interface BenchmarkRunner {
+    fun run(benchmark: String, n: Int)
 }

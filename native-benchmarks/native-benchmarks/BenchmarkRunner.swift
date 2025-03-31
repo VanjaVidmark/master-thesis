@@ -3,11 +3,9 @@
 //  iosApp
 //
 //  Created by Vanja Vidmark on 2025-03-18.
-//  Copyright © 2025 orgName. All rights reserved.
 //
 
 import Foundation
-import ComposeApp
 
 public typealias BenchConfigs = (
     filename: String,
@@ -15,22 +13,22 @@ public typealias BenchConfigs = (
     headerDescription: String
 )
 
-class BenchmarkRunnerImpl: BenchmarkRunner {
-    func run(benchmark: String, n: Int32) {
+class BenchmarkRunner {
+    func run(benchmark: String, n: Int) {
         print("Starting Benchmark: \(benchmark), n = \(n)")
 
         // Setup benchmark config
         let benchConfigs = BenchConfigs(
-            filename: "Kmp\(benchmark)BenchmarkResults.txt",
-            headerText: "KMP \(benchmark) Benchmark",
+            filename: "Native\(benchmark)BenchmarkResults.txt",
+            headerText: "Native \(benchmark) Benchmark",
             headerDescription: "\nCPU | FPS | Frame Overrun (ms)| Memory (MB) | Timestamp\n---"
         )
-
+        
         // Iphone
         let serverURL = URL(string: "http://192.168.0.86:5050/upload")!
         // simulator
         // let serverURL = URL(string: "http://localhost:5050/upload")!
-
+        
         let metricHandler = MetricHandler(serverURL: serverURL, configs: benchConfigs)
         let performanceCalculator = PerformanceCalculator()
 
@@ -55,11 +53,13 @@ class BenchmarkRunnerImpl: BenchmarkRunner {
             print("Unsupported benchmark: \(benchmark)")
         }
     }
-
-    private func runHardwareBenchmark(benchmark: String, n: Int32, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
+    
+    private func runHardwareBenchmark(benchmark: String, n: Int, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
+        /*
         Task {
             do {
                 let geolocationBenchmark = GeolocationBenchmark()
+                print("entered hw func")
 
                 // First pass (measuring time only)
                 let startTime = Date()
@@ -72,15 +72,15 @@ class BenchmarkRunnerImpl: BenchmarkRunner {
                 try await geolocationBenchmark.runBenchmark(n: n)
                 performanceCalculator.pause()
                 metricHandler.stop()
-                print("\(benchmark) benchmark finished and metrics posted to server")
+                print("\(benchmark) benchmark second pass finished, metrics written to: \(fileURL)")
 
             } catch {
                 print("\(benchmark) benchmark failed: \(error)")
             }
-        }
+        } */
     }
 
-    private func runUiBenchmark(benchmark: String, n: Int32, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
+    private func runUiBenchmark(benchmark: String, n: Int, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
         Task {
             do {
                 performanceCalculator.start(metricHandler: metricHandler)
@@ -89,22 +89,41 @@ class BenchmarkRunnerImpl: BenchmarkRunner {
                 case "Scroll":
                     let scrollBenchmark = ScrollBenchmark()
                     try await scrollBenchmark.runBenchmark(n: n)
-
+    
                 case "Visibility":
                     let visibilityBenchmark = VisibilityBenchmark()
                     try await visibilityBenchmark.runBenchmark(n: n)
-
+                     
                 default:
                     break
                 }
 
                 performanceCalculator.pause()
                 metricHandler.stop()
-                print("\(benchmark) benchmark finished and metrics posted to server")
+                print("\(benchmark) benchmark finished and results posted to server")
 
             } catch {
                 print("\(benchmark) benchmark failed: \(error)")
             }
         }
     }
+
+    private func createFile(fileName: String) -> URL? {
+        let manager = FileManager.default
+        if let dir = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let fileURL = dir.appendingPathComponent(fileName + ".txt")
+            do {
+                if manager.fileExists(atPath: fileURL.path) {
+                    try manager.removeItem(at: fileURL)
+                }
+                try "".write(to: fileURL, atomically: false, encoding: .utf8)
+                print("Created metrics file at: \(fileURL)")
+                return fileURL
+            } catch {
+                print("Error creating file: \(error)")
+            }
+        }
+        return nil
+    }
+
 }

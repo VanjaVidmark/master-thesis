@@ -1,7 +1,4 @@
-package org.example.kmpbenchmarks
-
-import kotlinx.coroutines.runBlocking
-import org.example.kmpbenchmarks.scroll.ScrollController
+package org.example.kmpbenchmarks.scroll
 
 class ScrollBenchmark {
     suspend fun runBenchmark(n: Int): String {

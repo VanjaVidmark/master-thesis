@@ -1,71 +1,51 @@
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.example.kmpbenchmarks.scroll.ScrollController
 import org.jetbrains.compose.resources.painterResource
 import kmp_benchmarks.composeapp.generated.resources.Res
 import kmp_benchmarks.composeapp.generated.resources.example_img
+import org.example.kmpbenchmarks.visibility.VisibilityController
 
 @Composable
-fun ScrollScreen(onDone: () -> Unit) {
-    val listState = rememberLazyListState()
-    val isScrolling by ScrollController.isScrolling.collectAsState()
-    val scope = rememberCoroutineScope()
+fun VisibilityScreen(onDone: () -> Unit) {
+    val isRunning by VisibilityController.isRunning.collectAsState()
 
-    var scrollJob by remember { mutableStateOf<Job?>(null) }
+    val infiniteTransition = rememberInfiniteTransition()
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
 
-    // Simulate the scrolling behavior
-    LaunchedEffect(isScrolling) {
-        if (isScrolling) {
-            scrollJob = scope.launch {
-                while (ScrollController.isScrolling.value) {
-                    listState.scrollBy(100f)
-                    delay(5L)
-                }
-                onDone()
-            }
-        } else {
-            onDone()
-            scrollJob?.cancel()
-            scrollJob = null
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (isRunning) {
+            Image(
+                painter = painterResource(Res.drawable.example_img),
+                contentDescription = "Example Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(alpha)
+            )
         }
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(1000) { index ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Image(
-                    painter = painterResource(Res.drawable.example_img),
-                    contentDescription = "Item image",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .padding(end = 8.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Text("Item $index")
-            }
+    LaunchedEffect(isRunning) {
+        if (!isRunning) {
+            onDone()
         }
     }
 }

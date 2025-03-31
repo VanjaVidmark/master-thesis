@@ -1,8 +1,8 @@
-package org.example.kmpbenchmarks.scroll
+package org.example.kmpbenchmarks.visibility
 
-class ScrollBenchmark {
+class VisibilityBenchmark {
     suspend fun runBenchmark(n: Int): String {
-        ScrollController.startScrollBenchmark(n)
-        return "Scroll benchmark ran for $n seconds"
+        VisibilityController.startScrollBenchmark(n)
+        return "Visibility benchmark ran for $n seconds"
     }
 }

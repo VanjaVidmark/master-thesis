@@ -1,7 +1,4 @@
-package org.example.kmpbenchmarks
-
-import kotlin.time.Duration
-import kotlin.time.measureTime
+package org.example.kmpbenchmarks.geolocation
 
 data class LocationData(
     val lat: Double,
@@ -12,33 +9,23 @@ expect fun checkLocationPermission(): Boolean
 expect suspend fun getCurrentLocation(): LocationData?
 
 class GeolocationBenchmark {
-    suspend fun runBenchmark(n: Int): String {
+    suspend fun runBenchmark(n: Int) {
+        println("Inside kotlin Geolocation Benchmark")
         if (!checkLocationPermission()) {
-            return "Location permission not granted"
+            println("Location permission not granted")
         }
 
         var successfulFetches = 0
-        val timeResults = mutableListOf<Duration>()
-        val metricResults = mutableListOf<String>()
 
-        // First Pass: Measure Execution Time Only
         repeat(n) {
-            val elapsedTime = measureTime {
-                val location = getCurrentLocation()
-                if (location != null) {
-                    successfulFetches++
-                }
+            println("Fetching location $it")
+            val location = getCurrentLocation()
+            println("Fetched location: $location")
+            if (location != null) {
+                successfulFetches++
             }
-            timeResults.add(elapsedTime)
-            println(elapsedTime)
         }
 
-        // Second Pass: Measure Execution Time + Performance Metrics
-
-
-        // Export performance data to CSV
-        // metricMonitor.exportToCSV(metricResults)
-
-        return "Completed $successfulFetches successful location fetches"
+        println("Completed $successfulFetches successful location fetches")
     }
 }

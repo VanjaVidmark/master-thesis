@@ -6,3 +6,25 @@
 //
 
 import Foundation
+import Combine
+
+class VisibilityController: ObservableObject {
+    static let shared = VisibilityController()
+
+    @Published var isRunning: Bool = false
+
+    @MainActor
+    func startBenchmark(seconds: Int) async {
+        isRunning = true
+        try? await Task.sleep(nanoseconds: UInt64(seconds) * 1_000_000_000)
+        await MainActor.run {
+                isRunning = false
+            }
+    }
+}
+
+class VisibilityBenchmark {
+    func runBenchmark(n: Int) async throws {
+        await VisibilityController.shared.startBenchmark(seconds: Int(n))
+    }
+}

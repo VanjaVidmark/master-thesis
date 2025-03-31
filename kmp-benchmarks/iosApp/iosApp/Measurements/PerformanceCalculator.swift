@@ -33,6 +33,7 @@ internal class PerformanceCalculator {
     private var displayLink: CADisplayLink!
     private let linkedFramesList = LinkedFramesList()
     private var startTimestamp: TimeInterval?
+    private var previousFrameTimestamp: TimeInterval?
     private var metricHandler: MetricHandler?
 
     // MARK: Init Methods & Superclass Overriders
@@ -65,7 +66,8 @@ private extension PerformanceCalculator {
     @objc func displayLinkAction(displayLink: CADisplayLink) { 
         // triggered every time the screen refreshes
         self.linkedFramesList.append(frameWithTimestamp: displayLink.timestamp)
-        self.takePerformanceEvidence()
+        self.takePerformanceEvidence(timestamp: displayLink.timestamp)
+        previousFrameTimestamp = displayLink.timestamp
     }
 }
 
@@ -73,13 +75,12 @@ private extension PerformanceCalculator {
 
 private extension PerformanceCalculator {
     
-    func takePerformanceEvidence() {
+    func takePerformanceEvidence(timestamp: TimeInterval) {
         let cpuUsage = self.cpuUsage()
         let fps = self.linkedFramesList.count
-        let jank = self.linkedFramesList.detectFrameJank()
+        let overrun = self.frameOverrun(currentTimestamp: timestamp)
         let memoryUsage = self.memoryUsage()
-        let timestamp = ProcessInfo.processInfo.systemUptime
-        let measurement = "\(cpuUsage) | \(fps) | \(jank) | \(memoryUsage) | \(timestamp)"
+        let measurement = "\(cpuUsage) | \(fps) | \(overrun) | \(memoryUsage) | \(timestamp)"
         
         // TODO: Metrichandler är Annas, skriv om eventuellt.
         if (metricHandler != nil) {
@@ -122,6 +123,17 @@ private extension PerformanceCalculator {
         
         vm_deallocate(mach_task_self_, vm_address_t(UInt(bitPattern: threadsList)), vm_size_t(Int(threadsCount) * MemoryLayout<thread_t>.stride))
         return totalUsageOfCPU
+    }
+    
+    func frameOverrun(currentTimestamp: TimeInterval) -> Double {
+        if let previous = previousFrameTimestamp {
+            let frameDuration = currentTimestamp - previous
+            let frameBudget = 1.0 / 60.0  // TODO: perhaps not hardcode 60 here?
+            let overrun = frameDuration - frameBudget
+
+            return overrun * 1000.0
+        }
+        return 0.0
     }
         
     func memoryUsage() -> Double {

@@ -8,11 +8,49 @@
 import SwiftUI
 
 struct VisibilityScreen: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    @ObservedObject var controller = VisibilityController.shared
+    @State private var opacity: Double = 1.0
+    @State private var fadeIn = false
+    @State private var timer: Timer?
 
-#Preview {
-    VisibilityScreen()
+    let onDone: () -> Void
+
+    var body: some View {
+        ZStack {
+            if controller.isRunning {
+                Image("example_img")
+                    .resizable()
+                    .scaledToFill()
+                    .opacity(opacity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
+                    .onAppear {
+                        startAnimating()
+                    }
+                    .onDisappear {
+                        stopAnimating()
+                    }
+            }
+        }
+        .onChange(of: controller.isRunning) { running in
+            if !running {
+                stopAnimating()
+                onDone()
+            }
+        }
+    }
+
+    func startAnimating() {
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            withAnimation(.linear(duration: 1.0)) {
+                opacity = fadeIn ? 1.0 : 0.0
+                fadeIn.toggle()
+            }
+        }
+    }
+
+    func stopAnimating() {
+        timer?.invalidate()
+        timer = nil
+    }
 }

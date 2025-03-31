@@ -1,18 +1,16 @@
-package org.example.kmpbenchmarks.scroll
+package org.example.kmpbenchmarks.visibility
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-object ScrollController {
-    private val _isScrolling = MutableStateFlow(false)
-    val isScrolling = _isScrolling.asStateFlow()
+object VisibilityController {
+    private val _isRunning = MutableStateFlow(false)
+    val isRunning = _isRunning.asStateFlow()
 
     suspend fun startScrollBenchmark(seconds: Int) {
-        println("Benchmark started")
-        _isScrolling.value = true
+        _isRunning.value = true
         delay(seconds * 1000L)
-        _isScrolling.value = false
-        println("Benchmark ended")
+        _isRunning.value = false
     }
 }

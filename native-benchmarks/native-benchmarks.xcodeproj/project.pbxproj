@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D72D92EF3600C1D277 /* MetricHandler.swift */; };
+		D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */; };
+		D88635DC2D92F02200C1D277 /* BenchmarkRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */; };
+		D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */; };
+		D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635E02D92F59500C1D277 /* ScrollController.swift */; };
+		D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635E22D92F5AC00C1D277 /* ScrollScreen.swift */; };
+		D8BCCD532D9429A400479E91 /* VisibilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BCCD522D9429A400479E91 /* VisibilityController.swift */; };
+		D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BCCD542D942A2700479E91 /* VisibilityScreen.swift */; };
 		D8E827C42D70486800415E1E /* native_benchmarksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827C32D70486800415E1E /* native_benchmarksApp.swift */; };
 		D8E827C62D70486800415E1E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827C52D70486800415E1E /* ContentView.swift */; };
 		D8E827C82D70486900415E1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8E827C72D70486900415E1E /* Assets.xcassets */; };
 		D8E827CB2D70486900415E1E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8E827CA2D70486900415E1E /* Preview Assets.xcassets */; };
-		D8E827D52D70486900415E1E /* native_benchmarksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827D42D70486900415E1E /* native_benchmarksTests.swift */; };
-		D8E827DF2D70486900415E1E /* native_benchmarksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827DE2D70486900415E1E /* native_benchmarksUITests.swift */; };
-		D8E827E12D70486900415E1E /* native_benchmarksUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827E02D70486900415E1E /* native_benchmarksUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,16 +39,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D88635D72D92EF3600C1D277 /* MetricHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricHandler.swift; sourceTree = "<group>"; };
+		D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceCalculator.swift; sourceTree = "<group>"; };
+		D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BenchmarkRunner.swift; sourceTree = "<group>"; };
+		D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedFramesList.swift; sourceTree = "<group>"; };
+		D88635E02D92F59500C1D277 /* ScrollController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollController.swift; sourceTree = "<group>"; };
+		D88635E22D92F5AC00C1D277 /* ScrollScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollScreen.swift; sourceTree = "<group>"; };
+		D8BCCD522D9429A400479E91 /* VisibilityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityController.swift; sourceTree = "<group>"; };
+		D8BCCD542D942A2700479E91 /* VisibilityScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityScreen.swift; sourceTree = "<group>"; };
 		D8E827C02D70486800415E1E /* native-benchmarks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "native-benchmarks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8E827C32D70486800415E1E /* native_benchmarksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = native_benchmarksApp.swift; sourceTree = "<group>"; };
 		D8E827C52D70486800415E1E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D8E827C72D70486900415E1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8E827CA2D70486900415E1E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D8E827D02D70486900415E1E /* native-benchmarksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "native-benchmarksTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D8E827D42D70486900415E1E /* native_benchmarksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = native_benchmarksTests.swift; sourceTree = "<group>"; };
 		D8E827DA2D70486900415E1E /* native-benchmarksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "native-benchmarksUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D8E827DE2D70486900415E1E /* native_benchmarksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = native_benchmarksUITests.swift; sourceTree = "<group>"; };
-		D8E827E02D70486900415E1E /* native_benchmarksUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = native_benchmarksUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,12 +81,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D88635D62D92EF2600C1D277 /* Measurements */ = {
+			isa = PBXGroup;
+			children = (
+				D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */,
+				D88635D72D92EF3600C1D277 /* MetricHandler.swift */,
+				D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */,
+			);
+			path = Measurements;
+			sourceTree = "<group>";
+		};
+		D88635DF2D92F58800C1D277 /* scroll */ = {
+			isa = PBXGroup;
+			children = (
+				D88635E02D92F59500C1D277 /* ScrollController.swift */,
+				D88635E22D92F5AC00C1D277 /* ScrollScreen.swift */,
+			);
+			path = scroll;
+			sourceTree = "<group>";
+		};
+		D8BCCD512D94299400479E91 /* visibility */ = {
+			isa = PBXGroup;
+			children = (
+				D8BCCD522D9429A400479E91 /* VisibilityController.swift */,
+				D8BCCD542D942A2700479E91 /* VisibilityScreen.swift */,
+			);
+			path = visibility;
+			sourceTree = "<group>";
+		};
 		D8E827B72D70486800415E1E = {
 			isa = PBXGroup;
 			children = (
 				D8E827C22D70486800415E1E /* native-benchmarks */,
-				D8E827D32D70486900415E1E /* native-benchmarksTests */,
-				D8E827DD2D70486900415E1E /* native-benchmarksUITests */,
 				D8E827C12D70486800415E1E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +130,10 @@
 		D8E827C22D70486800415E1E /* native-benchmarks */ = {
 			isa = PBXGroup;
 			children = (
+				D8BCCD512D94299400479E91 /* visibility */,
+				D88635DF2D92F58800C1D277 /* scroll */,
+				D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */,
+				D88635D62D92EF2600C1D277 /* Measurements */,
 				D8E827C32D70486800415E1E /* native_benchmarksApp.swift */,
 				D8E827C52D70486800415E1E /* ContentView.swift */,
 				D8E827C72D70486900415E1E /* Assets.xcassets */,
@@ -108,23 +148,6 @@
 				D8E827CA2D70486900415E1E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		D8E827D32D70486900415E1E /* native-benchmarksTests */ = {
-			isa = PBXGroup;
-			children = (
-				D8E827D42D70486900415E1E /* native_benchmarksTests.swift */,
-			);
-			path = "native-benchmarksTests";
-			sourceTree = "<group>";
-		};
-		D8E827DD2D70486900415E1E /* native-benchmarksUITests */ = {
-			isa = PBXGroup;
-			children = (
-				D8E827DE2D70486900415E1E /* native_benchmarksUITests.swift */,
-				D8E827E02D70486900415E1E /* native_benchmarksUITestsLaunchTests.swift */,
-			);
-			path = "native-benchmarksUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +280,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */,
 				D8E827C62D70486800415E1E /* ContentView.swift in Sources */,
+				D8BCCD532D9429A400479E91 /* VisibilityController.swift in Sources */,
+				D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */,
+				D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */,
+				D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */,
+				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
+				D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */,
 				D8E827C42D70486800415E1E /* native_benchmarksApp.swift in Sources */,
+				D88635DC2D92F02200C1D277 /* BenchmarkRunner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +297,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E827D52D70486900415E1E /* native_benchmarksTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,8 +304,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8E827DF2D70486900415E1E /* native_benchmarksUITests.swift in Sources */,
-				D8E827E12D70486900415E1E /* native_benchmarksUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,6 +450,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"native-benchmarks/Preview Content\"";
+				DEVELOPMENT_TEAM = FGNJRSQ238;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -450,6 +479,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"native-benchmarks/Preview Content\"";
+				DEVELOPMENT_TEAM = FGNJRSQ238;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
