@@ -10,7 +10,6 @@ expect suspend fun getCurrentLocation(): LocationData?
 
 class GeolocationBenchmark {
     suspend fun runBenchmark(n: Int) {
-        println("Inside kotlin Geolocation Benchmark")
         if (!checkLocationPermission()) {
             println("Location permission not granted")
         }
@@ -18,7 +17,6 @@ class GeolocationBenchmark {
         var successfulFetches = 0
 
         repeat(n) {
-            println("Fetching location $it")
             val location = getCurrentLocation()
             println("Fetched location: $location")
             if (location != null) {

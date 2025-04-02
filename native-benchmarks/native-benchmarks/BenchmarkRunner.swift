@@ -1,6 +1,6 @@
 //
 //  BenchmarkRunner.swift
-//  iosApp
+//  native-benchmarks
 //
 //  Created by Vanja Vidmark on 2025-03-18.
 //
@@ -25,19 +25,17 @@ class BenchmarkRunner {
         )
         
         // Iphone
-        let serverURL = URL(string: "http://192.168.0.86:5050/upload")!
+        // let serverURL = URL(string: "http://192.168.0.86:5050/upload")!
         // simulator
-        // let serverURL = URL(string: "http://localhost:5050/upload")!
+        let serverURL = URL(string: "http://localhost:5050/upload")!
         
-        let metricHandler = MetricHandler(serverURL: serverURL, configs: benchConfigs)
-        let performanceCalculator = PerformanceCalculator()
+        let performanceCalculator = PerformanceCalculator(serverURL: serverURL, configs: benchConfigs)
 
         switch benchmark {
-        case "Geolocation":
+        case "Geolocation", "FileWrite", "FileRead", "FileDelete":
             runHardwareBenchmark(
                 benchmark: benchmark,
                 n: n,
-                metricHandler: metricHandler,
                 performanceCalculator: performanceCalculator
             )
 
@@ -45,7 +43,6 @@ class BenchmarkRunner {
             runUiBenchmark(
                 benchmark: benchmark,
                 n: n,
-                metricHandler: metricHandler,
                 performanceCalculator: performanceCalculator
             )
 
@@ -54,36 +51,48 @@ class BenchmarkRunner {
         }
     }
     
-    private func runHardwareBenchmark(benchmark: String, n: Int, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
+    private func runHardwareBenchmark(benchmark: String, n: Int, performanceCalculator: PerformanceCalculator) {
         /*
+        let geolocationBenchmark = GeolocationBenchmark()
+        // First pass (measuring time only)
+        let startTime = Date()
+        geolocationBenchmark.runBenchmark(n: n)
+        let duration = Date().timeIntervalSince(startTime)
+        print("First pass completed in \(duration) seconds.")
+
+        // Second pass (collecting metrics)
+        performanceCalculator.start(metricHandler: metricHandler)
+        geolocationBenchmark.runBenchmark(n: n)
+        performanceCalculator.pause()
+        metricHandler.stop()
+        print("\(benchmark) benchmark second pass finished, posted to server")
+         */
         Task {
-            do {
-                let geolocationBenchmark = GeolocationBenchmark()
-                print("entered hw func")
-
-                // First pass (measuring time only)
-                let startTime = Date()
-                try await geolocationBenchmark.runBenchmark(n: n)
-                let duration = Date().timeIntervalSince(startTime)
-                print("First pass completed in \(duration) seconds.")
-
-                // Second pass (collecting metrics)
-                performanceCalculator.start(metricHandler: metricHandler)
-                try await geolocationBenchmark.runBenchmark(n: n)
-                performanceCalculator.pause()
-                metricHandler.stop()
-                print("\(benchmark) benchmark second pass finished, metrics written to: \(fileURL)")
-
-            } catch {
-                print("\(benchmark) benchmark failed: \(error)")
+            switch benchmark {
+            case "FileWrite":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runWriteBenchmark(n: n)
+  
+            case "FileRead":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runReadBenchmark(n: n)
+                
+            case "FileDelete":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runDeleteBenchmark(n: n)
+                
+                
+            default:
+                break
             }
-        } */
+            
+        }
     }
 
-    private func runUiBenchmark(benchmark: String, n: Int, metricHandler: MetricHandler, performanceCalculator: PerformanceCalculator) {
+    private func runUiBenchmark(benchmark: String, n: Int, performanceCalculator: PerformanceCalculator) {
         Task {
             do {
-                performanceCalculator.start(metricHandler: metricHandler)
+                performanceCalculator.start()
 
                 switch benchmark {
                 case "Scroll":
@@ -99,7 +108,6 @@ class BenchmarkRunner {
                 }
 
                 performanceCalculator.pause()
-                metricHandler.stop()
                 print("\(benchmark) benchmark finished and results posted to server")
 
             } catch {
@@ -107,23 +115,4 @@ class BenchmarkRunner {
             }
         }
     }
-
-    private func createFile(fileName: String) -> URL? {
-        let manager = FileManager.default
-        if let dir = manager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let fileURL = dir.appendingPathComponent(fileName + ".txt")
-            do {
-                if manager.fileExists(atPath: fileURL.path) {
-                    try manager.removeItem(at: fileURL)
-                }
-                try "".write(to: fileURL, atomically: false, encoding: .utf8)
-                print("Created metrics file at: \(fileURL)")
-                return fileURL
-            } catch {
-                print("Error creating file: \(error)")
-            }
-        }
-        return nil
-    }
-
 }

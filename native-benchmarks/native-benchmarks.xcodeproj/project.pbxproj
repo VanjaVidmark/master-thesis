@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */; };
+		D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */; };
 		D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D72D92EF3600C1D277 /* MetricHandler.swift */; };
 		D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */; };
 		D88635DC2D92F02200C1D277 /* BenchmarkRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeolocationBenchmark.swift; sourceTree = "<group>"; };
+		D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperationsBenchmark.swift; sourceTree = "<group>"; };
 		D88635D72D92EF3600C1D277 /* MetricHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricHandler.swift; sourceTree = "<group>"; };
 		D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceCalculator.swift; sourceTree = "<group>"; };
 		D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BenchmarkRunner.swift; sourceTree = "<group>"; };
@@ -81,6 +85,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D82C9E082D9AB60900959526 /* geolocation */ = {
+			isa = PBXGroup;
+			children = (
+				D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */,
+			);
+			path = geolocation;
+			sourceTree = "<group>";
+		};
+		D82C9E0B2D9BDDDC00959526 /* file */ = {
+			isa = PBXGroup;
+			children = (
+				D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */,
+			);
+			path = file;
+			sourceTree = "<group>";
+		};
 		D88635D62D92EF2600C1D277 /* Measurements */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +150,8 @@
 		D8E827C22D70486800415E1E /* native-benchmarks */ = {
 			isa = PBXGroup;
 			children = (
+				D82C9E0B2D9BDDDC00959526 /* file */,
+				D82C9E082D9AB60900959526 /* geolocation */,
 				D8BCCD512D94299400479E91 /* visibility */,
 				D88635DF2D92F58800C1D277 /* scroll */,
 				D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */,
@@ -283,9 +305,11 @@
 				D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */,
 				D8E827C62D70486800415E1E /* ContentView.swift in Sources */,
 				D8BCCD532D9429A400479E91 /* VisibilityController.swift in Sources */,
+				D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */,
 				D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */,
 				D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */,
 				D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */,
+				D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */,
 				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
 				D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */,
 				D8E827C42D70486800415E1E /* native_benchmarksApp.swift in Sources */,
@@ -453,6 +477,7 @@
 				DEVELOPMENT_TEAM = FGNJRSQ238;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location needed for benchmark";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -482,6 +507,7 @@
 				DEVELOPMENT_TEAM = FGNJRSQ238;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location needed for benchmark";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
+import org.example.kmpbenchmarks.geolocation.GeolocationBenchmark
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -26,10 +27,33 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "Geolocation", n = 10)
+                        GeolocationBenchmark().runBenchmark(n = 1) // just fetch location once as warmup
+                        benchmarkRunner.run(benchmark = "Geolocation", n = 100)
                     }
                 }) {
                     Text("Run Geolocation Benchmark")
+                }
+
+                Button(onClick = {
+                    scope.launch {
+                        benchmarkRunner.run(benchmark = "FileWrite", n = 100)
+                    }
+                }) {
+                    Text("Run WRITE file Benchmark")
+                }
+                Button(onClick = {
+                    scope.launch {
+                        benchmarkRunner.run(benchmark = "FileRead", n = 100)
+                    }
+                }) {
+                    Text("Run READ file Benchmark")
+                }
+                Button(onClick = {
+                    scope.launch {
+                        benchmarkRunner.run(benchmark = "FileDelete", n = 100)
+                    }
+                }) {
+                    Text("Run DELETE file Benchmark")
                 }
 
                 Button(onClick = {

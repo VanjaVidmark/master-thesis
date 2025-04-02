@@ -25,45 +25,54 @@
 import Foundation
 import QuartzCore
 import UIKit
+import ComposeApp
 
 /// Performance calculator. Uses CADisplayLink to count FPS. Also counts CPU and memory usage.
-internal class PerformanceCalculator {
+internal class PerformanceCalculatorImpl : PerformanceCalculator {
 
     // MARK: Private Properties
     private var displayLink: CADisplayLink!
     private let linkedFramesList = LinkedFramesList()
     private var startTimestamp: TimeInterval?
     private var previousFrameTimestamp: TimeInterval?
-    private var metricHandler: MetricHandler?
+
+    // Properties for handing the measuemtents
+    private var queue = DispatchQueue(label: "metricHandler", attributes: .concurrent)
+    private var buffer = [String]()
+    private let benchConfigs: BenchConfigs
+    private let serverURL: URL
 
     // MARK: Init Methods & Superclass Overriders
-    required internal init() {
+    required internal init(serverURL: URL, configs: BenchConfigs) {
+        self.serverURL = serverURL
+        self.benchConfigs = configs
         self.configureDisplayLink()
+        self.addMeasurement(configs.headerText + configs.headerDescription)
     }
 }
 
 // MARK: Public Methods
 
-internal extension PerformanceCalculator {
+internal extension PerformanceCalculatorImpl {
     /// Starts performance monitoring.
-    func start(metricHandler: MetricHandler?) {
-        self.metricHandler = metricHandler
+    func start() {
         self.startTimestamp = Date().timeIntervalSince1970
         self.displayLink?.isPaused = false
     }
-    
+
     /// Pauses performance monitoring.
     func pause() {
+        print("pausing performancecalc")
         self.displayLink?.isPaused = true
         self.startTimestamp = nil
-        self.metricHandler = nil
+        self.stopAndSendMetrics()
     }
 }
 
 // MARK: Timer Actions
 
-private extension PerformanceCalculator {
-    @objc func displayLinkAction(displayLink: CADisplayLink) { 
+private extension PerformanceCalculatorImpl {
+    @objc func displayLinkAction(displayLink: CADisplayLink) {
         // triggered every time the screen refreshes
         self.linkedFramesList.append(frameWithTimestamp: displayLink.timestamp)
         self.takePerformanceEvidence(timestamp: displayLink.timestamp)
@@ -73,23 +82,17 @@ private extension PerformanceCalculator {
 
 // MARK: Monitoring
 
-private extension PerformanceCalculator {
-    
+private extension PerformanceCalculatorImpl {
+
     func takePerformanceEvidence(timestamp: TimeInterval) {
         let cpuUsage = self.cpuUsage()
         let fps = self.linkedFramesList.count
         let overrun = self.frameOverrun(currentTimestamp: timestamp)
         let memoryUsage = self.memoryUsage()
         let measurement = "\(cpuUsage) | \(fps) | \(overrun) | \(memoryUsage) | \(timestamp)"
-        
-        // TODO: Metrichandler är Annas, skriv om eventuellt.
-        if (metricHandler != nil) {
-            metricHandler!.addMeasurement(measurement)
-        } else {
-            print(measurement)
-        }
+        self.addMeasurement(measurement)
     }
-    
+
     func cpuUsage() -> Double {
         var totalUsageOfCPU: Double = 0.0
         var threadsList: thread_act_array_t?
@@ -99,7 +102,7 @@ private extension PerformanceCalculator {
                 task_threads(mach_task_self_, $0, &threadsCount)
             }
         }
-        
+
         if threadsResult == KERN_SUCCESS, let threadsList = threadsList {
             for index in 0..<threadsCount {
                 var threadInfo = thread_basic_info()
@@ -109,33 +112,32 @@ private extension PerformanceCalculator {
                         thread_info(threadsList[Int(index)], thread_flavor_t(THREAD_BASIC_INFO), $0, &threadInfoCount)
                     }
                 }
-                
+
                 guard infoResult == KERN_SUCCESS else {
                     break
                 }
-                
+
                 let threadBasicInfo = threadInfo as thread_basic_info
                 if threadBasicInfo.flags & TH_FLAGS_IDLE == 0 {
                     totalUsageOfCPU = (totalUsageOfCPU + (Double(threadBasicInfo.cpu_usage) / Double(TH_USAGE_SCALE) * 100.0))
                 }
             }
         }
-        
+
         vm_deallocate(mach_task_self_, vm_address_t(UInt(bitPattern: threadsList)), vm_size_t(Int(threadsCount) * MemoryLayout<thread_t>.stride))
         return totalUsageOfCPU
     }
-    
+
     func frameOverrun(currentTimestamp: TimeInterval) -> Double {
         if let previous = previousFrameTimestamp {
             let frameDuration = currentTimestamp - previous
             let frameBudget = 1.0 / 60.0  // TODO: perhaps not hardcode 60 here?
             let overrun = frameDuration - frameBudget
-
             return overrun * 1000.0
         }
         return 0.0
     }
-        
+
     func memoryUsage() -> Double {
         var taskInfo = task_vm_info_data_t()
         var count = mach_msg_type_number_t(MemoryLayout<task_vm_info>.size) / 4
@@ -152,24 +154,58 @@ private extension PerformanceCalculator {
         }
 
         let usedInMegaBytes = used / 1048576.0 // (= 1024*1024)
-        
+
         return usedInMegaBytes
     }
-    
+
 }
 
 // MARK: Configurations
 
-private extension PerformanceCalculator {
+private extension PerformanceCalculatorImpl {
     func configureDisplayLink() {
-        self.displayLink = CADisplayLink(target: self, selector: #selector(PerformanceCalculator.displayLinkAction(displayLink:)))
+        self.displayLink = CADisplayLink(target: self, selector: #selector(PerformanceCalculatorImpl.displayLinkAction(displayLink:)))
         self.displayLink.isPaused = true
         self.displayLink?.add(to: .current, forMode: .common)
-        
+
         let maxFps = UIScreen.main.maximumFramesPerSecond
         print("Displaylink is configured. Max FPS is \(maxFps) FPS.")
-        
+
         let totalInMegaBytes = Double(ProcessInfo.processInfo.physicalMemory) / 1048576.0 // (= 1024*1024)
         print("Total memory in MegaBytes is \(totalInMegaBytes)\n")
+    }
+
+    func addMeasurement(_ string: String) {
+        queue.async(flags: .barrier) {
+            self.buffer.append(string)
+        }
+    }
+
+    func stopAndSendMetrics() {
+        // Ensure all writes are done before posting
+        queue.sync(flags: .barrier) {
+            let allMetrics = buffer.joined(separator: "\n")
+            postToServer(metrics: allMetrics)
+        }
+    }
+
+    private func postToServer(metrics: String) {
+        var request = URLRequest(url: serverURL)
+        request.httpMethod = "POST"
+        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.setValue(benchConfigs.filename, forHTTPHeaderField: "Filename")
+        request.httpBody = metrics.data(using: .utf8)
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Failed to upload metrics: \(error)")
+                return
+            }
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Metrics uploaded: \(httpResponse.statusCode)")
+            }
+        }
+        task.resume()
     }
 }

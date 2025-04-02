@@ -25,6 +25,33 @@ struct ContentView: View {
 
             default:
                 VStack(spacing: 20) {
+                    /*
+                    Button("Run Geolocation Benchmark") {
+                        let warmup = GeolocationBenchmark()
+                        warmup.runBenchmark(n: 100)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            let benchmark = GeolocationBenchmark()
+                            benchmark.runBenchmark(n: 100)
+                        }
+                    
+                    }
+                    .buttonStyle(.borderedProminent)
+                     */
+                    
+                    Button("Run File WRITE Benchmark") {
+                        benchmarkRunner.run(benchmark: "FileWrite", n: 100)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Run File READ Benchmark") {
+                        benchmarkRunner.run(benchmark: "FileRead", n: 100)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Run File DELETE Benchmark") {
+                        benchmarkRunner.run(benchmark: "FileDelete", n: 100)
+                    }
+                    .buttonStyle(.borderedProminent)
                     
                     Button("Run Scroll Benchmark") {
                         currentScreen = "Scroll"

@@ -35,10 +35,19 @@ internal class PerformanceCalculator {
     private var startTimestamp: TimeInterval?
     private var previousFrameTimestamp: TimeInterval?
     private var metricHandler: MetricHandler?
+    
+    // Properties for handing the measuemtents
+    private var queue = DispatchQueue(label: "metricHandler", attributes: .concurrent)
+    private var buffer = [String]()
+    private let benchConfigs: BenchConfigs
+    private let serverURL: URL
 
     // MARK: Init Methods & Superclass Overriders
-    required internal init() {
+    required internal init(serverURL: URL, configs: BenchConfigs) {
+        self.serverURL = serverURL
+        self.benchConfigs = configs
         self.configureDisplayLink()
+        self.addMeasurement(configs.headerText + configs.headerDescription)
     }
 }
 
@@ -46,8 +55,7 @@ internal class PerformanceCalculator {
 
 internal extension PerformanceCalculator {
     /// Starts performance monitoring.
-    func start(metricHandler: MetricHandler?) {
-        self.metricHandler = metricHandler
+    func start() {
         self.startTimestamp = Date().timeIntervalSince1970
         self.displayLink?.isPaused = false
     }
@@ -56,7 +64,7 @@ internal extension PerformanceCalculator {
     func pause() {
         self.displayLink?.isPaused = true
         self.startTimestamp = nil
-        self.metricHandler = nil
+        self.stopAndSendMetrics()
     }
 }
 
@@ -81,13 +89,7 @@ private extension PerformanceCalculator {
         let overrun = self.frameOverrun(currentTimestamp: timestamp)
         let memoryUsage = self.memoryUsage()
         let measurement = "\(cpuUsage) | \(fps) | \(overrun) | \(memoryUsage) | \(timestamp)"
-        
-        // TODO: Metrichandler är Annas, skriv om eventuellt.
-        if (metricHandler != nil) {
-            metricHandler!.addMeasurement(measurement)
-        } else {
-            print(measurement)
-        }
+        self.addMeasurement(measurement)
     }
     
     func cpuUsage() -> Double {
@@ -170,5 +172,39 @@ private extension PerformanceCalculator {
         
         let totalInMegaBytes = Double(ProcessInfo.processInfo.physicalMemory) / 1048576.0 // (= 1024*1024)
         print("Total memory in MegaBytes is \(totalInMegaBytes)\n")
+    }
+    
+    func addMeasurement(_ string: String) {
+        queue.async(flags: .barrier) {
+            self.buffer.append(string)
+        }
+    }
+    
+    func stopAndSendMetrics() {
+        // Ensure all writes are done before posting
+        queue.sync(flags: .barrier) {
+            let allMetrics = buffer.joined(separator: "\n")
+            postToServer(metrics: allMetrics)
+        }
+    }
+    
+    private func postToServer(metrics: String) {
+        var request = URLRequest(url: serverURL)
+        request.httpMethod = "POST"
+        request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
+        request.setValue(benchConfigs.filename, forHTTPHeaderField: "Filename")
+        request.httpBody = metrics.data(using: .utf8)
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Failed to upload metrics: \(error)")
+                return
+            }
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Metrics uploaded: \(httpResponse.statusCode)")
+            }
+        }
+        task.resume()
     }
 }

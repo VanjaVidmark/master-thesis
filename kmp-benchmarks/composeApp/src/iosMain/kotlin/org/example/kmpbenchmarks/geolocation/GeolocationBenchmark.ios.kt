@@ -26,7 +26,6 @@ actual fun checkLocationPermission(): Boolean {
     }
 }
 
-// Singleton delegate to maintain strong reference
 @OptIn(ExperimentalForeignApi::class)
 private class LocationDelegate(
     private val onLocationReceived: (LocationData?) -> Unit
@@ -45,18 +44,14 @@ private class LocationDelegate(
     }
 }
 
-@OptIn(ExperimentalForeignApi::class)
 actual suspend fun getCurrentLocation(): LocationData? = suspendCancellableCoroutine { cont ->
     val delegate = LocationDelegate { locationData ->
         if (cont.isActive) {
             cont.resume(locationData)
         }
     }
-    println("1")
     locationManager.delegate = delegate
-    println("2")
     locationManager.requestLocation()
-    println("3")
 
     cont.invokeOnCancellation {
         locationManager.delegate = null
