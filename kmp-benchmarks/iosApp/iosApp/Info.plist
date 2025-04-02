@@ -6,6 +6,12 @@
     <string>This app requires location access while running to perform benchmarking.</string>
     <key>NSLocalNetworkUsageDescription</key>
     <string>Needed to send benchmark data to your local server.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

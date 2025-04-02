@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 expect fun write(index: Int, data: ByteArray)
 expect fun delete(index: Int)
-expect fun read(index: Int): ByteArray?
+expect fun read(index: Int)
 
 class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalculator) {
     private val sizeInMB = 50

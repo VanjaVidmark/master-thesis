@@ -25,13 +25,13 @@ actual fun write(index: Int, data: ByteArray) {
     data.toNSData().writeToURL(url, atomically = true)
 }
 
-actual fun read(index: Int): ByteArray? {
+actual fun read(index: Int){
     val url = fileURL(index)
     if (!NSFileManager.defaultManager.fileExistsAtPath(url.path ?: "")) {
         println("File #$index not found")
-        return null
+    } else {
+        NSData.dataWithContentsOfURL(url)?.toByteArray()
     }
-    return NSData.dataWithContentsOfURL(url)?.toByteArray()
 }
 
 

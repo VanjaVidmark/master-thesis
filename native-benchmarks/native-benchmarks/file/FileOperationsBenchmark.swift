@@ -30,9 +30,9 @@ class FileOperationsBenchmark {
         try? data.write(to: url, options: .atomic)
     }
     
-    func read(index: Int) -> Data? {
+    func read(index: Int){
         let url = fileURL(for: index)
-        return try? Data(contentsOf: url)
+        try? Data(contentsOf: url)
     }
     
     func delete(index: Int) {
