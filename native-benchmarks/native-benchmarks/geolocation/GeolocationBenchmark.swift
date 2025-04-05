@@ -1,10 +1,3 @@
-//
-//  GeolocationBenchmark.swift
-//  native-benchmarks
-//
-//  Created by Vanja Vidmark on 2025-03-31.
-//
-
 import Foundation
 import CoreLocation
 
@@ -14,31 +7,26 @@ struct LocationData {
 }
 
 class GeolocationBenchmark: NSObject, CLLocationManagerDelegate {
-    private var locationManager: CLLocationManager?
+    private let locationManager: CLLocationManager
     private var continuation: CheckedContinuation<LocationData?, Never>?
 
-    func checkLocationPermission() -> Bool {
-        let status = locationManager?.authorizationStatus ?? .notDetermined
+    override init() {
+        self.locationManager = CLLocationManager()
+        super.init()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.requestWhenInUseAuthorization()
+    }
 
-        switch status {
-        case .authorizedWhenInUse, .authorizedAlways:
-            return true
-        case .notDetermined:
-            locationManager = CLLocationManager()
-            locationManager?.requestWhenInUseAuthorization()
-            return false
-        default:
-            return false
-        }
+    private func hasPermission() -> Bool {
+        let status = locationManager.authorizationStatus
+        return status == .authorizedWhenInUse || status == .authorizedAlways
     }
 
     func getCurrentLocation() async -> LocationData? {
         return await withCheckedContinuation { cont in
-            locationManager = CLLocationManager()
-            locationManager?.delegate = self
-            locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-            continuation = cont
-            locationManager?.requestLocation()
+            self.continuation = cont
+            locationManager.requestLocation()
         }
     }
 
@@ -55,14 +43,15 @@ class GeolocationBenchmark: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location error: \(error)")
+        print("Location error: \(error.localizedDescription)")
         continuation?.resume(returning: nil)
         continuation = nil
     }
 
     func runBenchmark(n: Int) async {
+        print("Inside Swift Geolocation Benchmark")
 
-        if !checkLocationPermission() {
+        guard hasPermission() else {
             print("Location permission not granted or still pending")
             return
         }
@@ -71,14 +60,16 @@ class GeolocationBenchmark: NSObject, CLLocationManagerDelegate {
 
         for i in 0..<n {
             print("Fetching location \(i)")
-            let location = await getCurrentLocation()
-            print("Fetched location: \(String(describing: location))")
-            if location != nil {
+            if let location = await getCurrentLocation() {
+                print("Fetched location: \(location)")
                 successfulFetches += 1
+            } else {
+                print("Failed to fetch location")
             }
+
+            try? await Task.sleep(nanoseconds: 500_000_000) // 0.5s delay
         }
 
         print("Completed \(successfulFetches) successful location fetches")
     }
 }
-

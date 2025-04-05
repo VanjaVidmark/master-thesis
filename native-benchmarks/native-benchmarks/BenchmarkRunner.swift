@@ -14,6 +14,8 @@ public typealias BenchConfigs = (
 )
 
 class BenchmarkRunner {
+    private var activeBenchmark: GeolocationBenchmark?
+
     func run(benchmark: String, n: Int) {
         print("Starting Benchmark: \(benchmark), n = \(n)")
 
@@ -25,14 +27,14 @@ class BenchmarkRunner {
         )
         
         // Iphone
-        // let serverURL = URL(string: "http://192.168.0.86:5050/upload")!
+        let serverURL = URL(string: "http://10.0.4.44:5050/upload")!
         // simulator
-        let serverURL = URL(string: "http://localhost:5050/upload")!
+        //let serverURL = URL(string: "http://localhost:5050/upload")!
         
         let performanceCalculator = PerformanceCalculator(serverURL: serverURL, configs: benchConfigs)
 
         switch benchmark {
-        case "Geolocation", "FileWrite", "FileRead", "FileDelete":
+        case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
             runHardwareBenchmark(
                 benchmark: benchmark,
                 n: n,
@@ -81,7 +83,32 @@ class BenchmarkRunner {
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
                 fileBenchmark.runDeleteBenchmark(n: n)
                 
+            case "Geolocation":
+                let startTime = Date()
+                performanceCalculator.start()
+
+                let geolocationBenchmark = GeolocationBenchmark()
+                self.activeBenchmark = geolocationBenchmark // RETAIN IT!
+
+                await geolocationBenchmark.runBenchmark(n: n)
+
+                performanceCalculator.pause()
+                let duration = Date().timeIntervalSince(startTime)
+                print("Geolocation completed in \(duration) seconds.")
+
+                self.activeBenchmark = nil
+            /*
+            case "Camera":
+                let startTime = Date()
+                let cameraBenchmark = CameraBenchmark()
+                performanceCalculator.start()
                 
+                cameraBenchmark.runBenchmark(n: n)
+                
+                performanceCalculator.pause()
+                let duration = Date().timeIntervalSince(startTime)
+                print("File write completed in \(duration) seconds.")
+                */
             default:
                 break
             }

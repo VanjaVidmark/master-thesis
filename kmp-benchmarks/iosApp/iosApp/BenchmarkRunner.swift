@@ -27,9 +27,9 @@ class BenchmarkRunnerImpl: BenchmarkRunner {
         )
         
         // Iphone
-        // let serverURL = URL(string: "http://192.168.0.86:5050/upload")!
+        let serverURL = URL(string: "http://10.0.4.44:5050/upload")!
         // simulator
-        let serverURL = URL(string: "http://localhost:5050/upload")!
+        // let serverURL = URL(string: "http://localhost:5050/upload")!
         
         let performanceCalculator = PerformanceCalculatorImpl(serverURL: serverURL, configs: benchConfigs)
         

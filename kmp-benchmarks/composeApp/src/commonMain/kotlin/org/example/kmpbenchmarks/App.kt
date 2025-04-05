@@ -28,7 +28,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                 Button(onClick = {
                     scope.launch {
                         GeolocationBenchmark().runBenchmark(n = 1) // just fetch location once as warmup
-                        benchmarkRunner.run(benchmark = "Geolocation", n = 100)
+                        benchmarkRunner.run(benchmark = "Geolocation", n = 20)
                     }
                 }) {
                     Text("Run Geolocation Benchmark")
@@ -36,21 +36,21 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileWrite", n = 100)
+                        benchmarkRunner.run(benchmark = "FileWrite", n = 20)
                     }
                 }) {
                     Text("Run WRITE file Benchmark")
                 }
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileRead", n = 100)
+                        benchmarkRunner.run(benchmark = "FileRead", n = 20)
                     }
                 }) {
                     Text("Run READ file Benchmark")
                 }
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileDelete", n = 100)
+                        benchmarkRunner.run(benchmark = "FileDelete", n = 20)
                     }
                 }) {
                     Text("Run DELETE file Benchmark")

@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var currentScreen: String = "Home"
     let benchmarkRunner = BenchmarkRunner()
+    @State private var showCamera = false
 
     var body: some View {
         VStack {
@@ -25,33 +26,48 @@ struct ContentView: View {
 
             default:
                 VStack(spacing: 20) {
-                    /*
-                    Button("Run Geolocation Benchmark") {
-                        let warmup = GeolocationBenchmark()
-                        warmup.runBenchmark(n: 100)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                            let benchmark = GeolocationBenchmark()
-                            benchmark.runBenchmark(n: 100)
-                        }
                     
+                    Button("Run Geolocation Benchmark") {
+                        Task {
+                            let warmup = GeolocationBenchmark()
+                            await warmup.runBenchmark(n: 2)
+                        }
+                        benchmarkRunner.run(benchmark: "Geolocation", n: 100)
                     }
                     .buttonStyle(.borderedProminent)
-                     */
+
                     
                     Button("Run File WRITE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileWrite", n: 100)
+                        benchmarkRunner.run(benchmark: "FileWrite", n: 20)
                     }
                     .buttonStyle(.borderedProminent)
                     
                     Button("Run File READ Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileRead", n: 100)
+                        benchmarkRunner.run(benchmark: "FileRead", n: 20)
                     }
                     .buttonStyle(.borderedProminent)
                     
                     Button("Run File DELETE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileDelete", n: 100)
+                        benchmarkRunner.run(benchmark: "FileDelete", n: 20)
                     }
                     .buttonStyle(.borderedProminent)
+                    
+                    Button("Open Camera") {
+                        showCamera = true
+                    }
+                    .fullScreenCover(isPresented: $showCamera) {
+                        CameraView()
+                    }
+                    /*
+                    Button("Run Camera Benchmark") {
+                        currentScreen = "Camera"
+                        Task {
+                            let warmup = CameraBenchmark()
+                            warmup.runBenchmark(n: 2)
+                        }
+                        benchmarkRunner.run(benchmark: "Camera", n: 10)
+                    }
+                    .buttonStyle(.borderedProminent)*/
                     
                     Button("Run Scroll Benchmark") {
                         currentScreen = "Scroll"
