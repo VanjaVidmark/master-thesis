@@ -26,7 +26,7 @@ struct ContentView: View {
 
             default:
                 VStack(spacing: 20) {
-                    
+                    /*
                     Button("Run Geolocation Benchmark") {
                         Task {
                             let warmup = GeolocationBenchmark()
@@ -34,21 +34,21 @@ struct ContentView: View {
                         }
                         benchmarkRunner.run(benchmark: "Geolocation", n: 100)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.borderedProminent)*/
 
                     
                     Button("Run File WRITE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileWrite", n: 20)
+                        benchmarkRunner.run(benchmark: "FileWrite")
                     }
                     .buttonStyle(.borderedProminent)
                     
                     Button("Run File READ Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileRead", n: 20)
+                        benchmarkRunner.run(benchmark: "FileRead")
                     }
                     .buttonStyle(.borderedProminent)
                     
                     Button("Run File DELETE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileDelete", n: 20)
+                        benchmarkRunner.run(benchmark: "FileDelete")
                     }
                     .buttonStyle(.borderedProminent)
                     
@@ -58,26 +58,20 @@ struct ContentView: View {
                     .fullScreenCover(isPresented: $showCamera) {
                         CameraView()
                     }
-                    /*
+                    
                     Button("Run Camera Benchmark") {
-                        currentScreen = "Camera"
-                        Task {
-                            let warmup = CameraBenchmark()
-                            warmup.runBenchmark(n: 2)
-                        }
-                        benchmarkRunner.run(benchmark: "Camera", n: 10)
+                        benchmarkRunner.run(benchmark: "Camera")
                     }
-                    .buttonStyle(.borderedProminent)*/
                     
                     Button("Run Scroll Benchmark") {
                         currentScreen = "Scroll"
-                        benchmarkRunner.run(benchmark: "Scroll", n: 5)
+                        benchmarkRunner.run(benchmark: "Scroll")
                     }
                     .buttonStyle(.borderedProminent)
 
                     Button("Run Visibility Benchmark") {
                         currentScreen = "Visibility"
-                        benchmarkRunner.run(benchmark: "Visibility", n: 5)
+                        benchmarkRunner.run(benchmark: "Visibility")
                     }
                     .buttonStyle(.borderedProminent)
                 }

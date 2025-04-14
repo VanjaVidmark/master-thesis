@@ -10,14 +10,14 @@ import Foundation
 class FileOperationsBenchmark {
     private let fileManager = FileManager.default
     private let baseURL: URL
-    private let performanceCalculator : PerformanceCalculator
+    private let performanceCalculator : HardwarePerformanceCalculator
     private let data: Data
     
-    init(performanceCalculator: PerformanceCalculator) {
+    init(performanceCalculator: HardwarePerformanceCalculator) {
         self.performanceCalculator = performanceCalculator
         self.baseURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         
-        let sizeInMB = 50
+        let sizeInMB = 10
         self.data = Data(count: sizeInMB * 1024 * 1024)
     }
 
@@ -40,49 +40,72 @@ class FileOperationsBenchmark {
         try? fileManager.removeItem(at: url)
     }
     
-    func runWriteBenchmark(n: Int) {
-        performanceCalculator.start()
-        let startTime = Date()
-        for i in 0..<n {
+    func runWriteBenchmark(n: Int, measureTime: Bool) {
+        // warmup rounds
+        for i in 0..<10 {
             self.write(index: i, data: data)
         }
+        // measurement rounds
+        if measureTime {
+            for i in 10..<n {
+                performanceCalculator.sampleTime("\(i) start")
+                self.write(index: i, data: data)
+                performanceCalculator.sampleTime("\(i) end")
+            }
+            performanceCalculator.postTimeSamples()
+        } else {
+            performanceCalculator.start()
+            for i in 10..<n {
+                self.write(index: i, data: data)
+            }
+            performanceCalculator.stopAndPost(iteration: 1)
+        }
         print("\(n) files written")
-        
-        let duration = Date().timeIntervalSince(startTime)
-        print("File write completed in \(duration) seconds.")
-        
-        performanceCalculator.pause()
     }
     
-    func runReadBenchmark(n: Int) {
-        
-        performanceCalculator.start()
-        let startTime = Date()
-        
-        for i in 0..<n {
+    func runReadBenchmark(n: Int, measureTime: Bool) {
+        // warmup rounds
+        for i in 0..<10 {
             self.read(index: i)
         }
+        // measurement rounds
+        if measureTime {
+            for i in 10..<n {
+                performanceCalculator.sampleTime("\(i) start")
+                self.read(index: i)
+                performanceCalculator.sampleTime("\(i) end")
+            }
+            performanceCalculator.postTimeSamples()
+        } else {
+            performanceCalculator.start()
+            for i in 10..<n {
+                self.read(index: i)
+            }
+            performanceCalculator.stopAndPost(iteration: 1)
+        }
         print("\(n) files read")
-        
-        let duration = Date().timeIntervalSince(startTime)
-        print("File read completed in \(duration) seconds.")
-        
-        performanceCalculator.pause()
     }
     
-    func runDeleteBenchmark(n: Int) {
-        
-        performanceCalculator.start()
-        let startTime = Date()
-        
-        for i in 0..<n {
-            self.delete(index: i)
+    func runDeleteBenchmark(n: Int, measureTime: Bool) {
+        // warmup rounds
+        for i in 0..<10 {
+            self.read(index: i)
+        }
+        // measurement rounds
+        if measureTime {
+            for i in 10..<n {
+                performanceCalculator.sampleTime("\(i) start")
+                self.delete(index: i)
+                performanceCalculator.sampleTime("\(i) end")
+            }
+            performanceCalculator.postTimeSamples()
+        } else {
+            performanceCalculator.start()
+            for i in 10..<n {
+                self.delete(index: i)
+            }
+            performanceCalculator.stopAndPost(iteration: 1)
         }
         print("\(n) files deleted")
-        
-        let duration = Date().timeIntervalSince(startTime)
-        print("File delete completed in \(duration) seconds.")
-        
-        performanceCalculator.pause()
     }
 }

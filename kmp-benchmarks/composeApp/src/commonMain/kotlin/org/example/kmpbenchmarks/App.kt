@@ -28,7 +28,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                 Button(onClick = {
                     scope.launch {
                         GeolocationBenchmark().runBenchmark(n = 1) // just fetch location once as warmup
-                        benchmarkRunner.run(benchmark = "Geolocation", n = 20)
+                        benchmarkRunner.run(benchmark = "Geolocation")
                     }
                 }) {
                     Text("Run Geolocation Benchmark")
@@ -36,21 +36,21 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileWrite", n = 20)
+                        benchmarkRunner.run(benchmark = "FileWrite")
                     }
                 }) {
                     Text("Run WRITE file Benchmark")
                 }
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileRead", n = 20)
+                        benchmarkRunner.run(benchmark = "FileRead")
                     }
                 }) {
                     Text("Run READ file Benchmark")
                 }
                 Button(onClick = {
                     scope.launch {
-                        benchmarkRunner.run(benchmark = "FileDelete", n = 20)
+                        benchmarkRunner.run(benchmark = "FileDelete")
                     }
                 }) {
                     Text("Run DELETE file Benchmark")
@@ -58,8 +58,16 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
                 Button(onClick = {
                     scope.launch {
+                        benchmarkRunner.run(benchmark = "Camera")
+                    }
+                }) {
+                    Text("Run Camera Benchmark")
+                }
+
+                Button(onClick = {
+                    scope.launch {
                         currentScreen = "Scroll"
-                        benchmarkRunner.run(benchmark = "Scroll", n = 5)
+                        benchmarkRunner.run(benchmark = "Scroll")
                     }
                 }) {
                     Text("Run Scroll Benchmark")
@@ -68,7 +76,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                 Button(onClick = {
                     scope.launch {
                         currentScreen = "Visibility"
-                        benchmarkRunner.run(benchmark = "Visibility", n = 5)
+                        benchmarkRunner.run(benchmark = "Visibility")
                     }
                 }) {
                     Text("Run Visibility Benchmark")

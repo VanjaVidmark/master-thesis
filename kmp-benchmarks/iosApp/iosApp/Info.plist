@@ -3,9 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app requires location access while running to perform benchmarking.</string>
+    <string>This app requires location access for benchmarking.</string>
     <key>NSLocalNetworkUsageDescription</key>
     <string>Needed to send benchmark data to your local server.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app requires camera access for benchmarking.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires photo library access for benchmarking.</string>
     <key>NSAppTransportSecurity</key>
     <dict>
         <key>NSAllowsArbitraryLoads</key>

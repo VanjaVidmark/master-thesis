@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 import glob
 import sys
+import numpy as np
 
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
@@ -9,7 +10,7 @@ implementations = ["Kmp", "Native"]
 data = {}
 
 for impl in implementations:
-    filename = f"{impl}{benchmark}BenchmarkResults.txt"
+    filename = f"{impl}{benchmark}.txt"
     if not os.path.isfile(filename):
         raise FileNotFoundError(f"Could not find file: {filename}")
 
@@ -49,7 +50,15 @@ for impl in implementations:
         "overrun": overrun_values,
         "memory": memory_values,
     }
+    time_deltas = np.diff(timestamps)
+    data[impl]["time_deltas"] = time_deltas
 
+if len(time_deltas) > 0:
+    print(f"\nTime delta stats for {impl}:")
+    print(f"  Avg delta:  {np.mean(time_deltas):.4f} s")
+    print(f"  Min delta:  {np.min(time_deltas):.4f} s")
+    print(f"  Max delta:  {np.max(time_deltas):.4f} s")
+    print(f"  Count:      {len(time_deltas)} samples")
 
 fig, axs = plt.subplots(2, 2, figsize=(12, 6), sharex=True)
 
@@ -73,3 +82,4 @@ for ax in axs[1]:
 fig.suptitle(f"{benchmark} Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
+

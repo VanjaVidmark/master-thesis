@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */; };
 		D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */; };
-		D86CE2082D9D5CED0029ED5C /* CameraBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE2072D9D5CED0029ED5C /* CameraBenchmark.swift */; };
 		D86CE20B2DA117F60029ED5C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE20A2DA117F60029ED5C /* CameraView.swift */; };
 		D86CE20D2DA118190029ED5C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE20C2DA118190029ED5C /* CameraViewController.swift */; };
-		D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D72D92EF3600C1D277 /* MetricHandler.swift */; };
-		D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */; };
+		D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE20E2DA11B070029ED5C /* CameraBenchmark.swift */; };
+		D86CE2122DA558480029ED5C /* UiPerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE2112DA558480029ED5C /* UiPerformanceCalculator.swift */; };
+		D88635DA2D92EF5800C1D277 /* HardwarePerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635D92D92EF5800C1D277 /* HardwarePerformanceCalculator.swift */; };
 		D88635DC2D92F02200C1D277 /* BenchmarkRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */; };
 		D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */; };
 		D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D88635E02D92F59500C1D277 /* ScrollController.swift */; };
@@ -46,12 +46,12 @@
 /* Begin PBXFileReference section */
 		D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeolocationBenchmark.swift; sourceTree = "<group>"; };
 		D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperationsBenchmark.swift; sourceTree = "<group>"; };
-		D86CE2072D9D5CED0029ED5C /* CameraBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBenchmark.swift; sourceTree = "<group>"; };
 		D86CE2092D9D5FCF0029ED5C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D86CE20A2DA117F60029ED5C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		D86CE20C2DA118190029ED5C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		D88635D72D92EF3600C1D277 /* MetricHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricHandler.swift; sourceTree = "<group>"; };
-		D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceCalculator.swift; sourceTree = "<group>"; };
+		D86CE20E2DA11B070029ED5C /* CameraBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBenchmark.swift; sourceTree = "<group>"; };
+		D86CE2112DA558480029ED5C /* UiPerformanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiPerformanceCalculator.swift; sourceTree = "<group>"; };
+		D88635D92D92EF5800C1D277 /* HardwarePerformanceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwarePerformanceCalculator.swift; sourceTree = "<group>"; };
 		D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BenchmarkRunner.swift; sourceTree = "<group>"; };
 		D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedFramesList.swift; sourceTree = "<group>"; };
 		D88635E02D92F59500C1D277 /* ScrollController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollController.swift; sourceTree = "<group>"; };
@@ -111,19 +111,26 @@
 		D86CE2062D9D5CE00029ED5C /* camera */ = {
 			isa = PBXGroup;
 			children = (
-				D86CE2072D9D5CED0029ED5C /* CameraBenchmark.swift */,
-				D86CE20A2DA117F60029ED5C /* CameraView.swift */,
-				D86CE20C2DA118190029ED5C /* CameraViewController.swift */,
+				D86CE20E2DA11B070029ED5C /* CameraBenchmark.swift */,
 			);
 			path = camera;
+			sourceTree = "<group>";
+		};
+		D86CE2102DA11D090029ED5C /* combined */ = {
+			isa = PBXGroup;
+			children = (
+				D86CE20C2DA118190029ED5C /* CameraViewController.swift */,
+				D86CE20A2DA117F60029ED5C /* CameraView.swift */,
+			);
+			path = combined;
 			sourceTree = "<group>";
 		};
 		D88635D62D92EF2600C1D277 /* Measurements */ = {
 			isa = PBXGroup;
 			children = (
 				D88635DD2D92F02E00C1D277 /* LinkedFramesList.swift */,
-				D88635D72D92EF3600C1D277 /* MetricHandler.swift */,
-				D88635D92D92EF5800C1D277 /* PerformanceCalculator.swift */,
+				D88635D92D92EF5800C1D277 /* HardwarePerformanceCalculator.swift */,
+				D86CE2112DA558480029ED5C /* UiPerformanceCalculator.swift */,
 			);
 			path = Measurements;
 			sourceTree = "<group>";
@@ -167,6 +174,7 @@
 		D8E827C22D70486800415E1E /* native-benchmarks */ = {
 			isa = PBXGroup;
 			children = (
+				D86CE2102DA11D090029ED5C /* combined */,
 				D86CE2092D9D5FCF0029ED5C /* Info.plist */,
 				D86CE2062D9D5CE00029ED5C /* camera */,
 				D82C9E0B2D9BDDDC00959526 /* file */,
@@ -323,17 +331,17 @@
 			files = (
 				D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */,
 				D86CE20B2DA117F60029ED5C /* CameraView.swift in Sources */,
+				D86CE2122DA558480029ED5C /* UiPerformanceCalculator.swift in Sources */,
 				D8E827C62D70486800415E1E /* ContentView.swift in Sources */,
-				D86CE2082D9D5CED0029ED5C /* CameraBenchmark.swift in Sources */,
 				D8BCCD532D9429A400479E91 /* VisibilityController.swift in Sources */,
 				D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */,
 				D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */,
 				D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */,
-				D88635D82D92EF3600C1D277 /* MetricHandler.swift in Sources */,
 				D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */,
 				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
 				D86CE20D2DA118190029ED5C /* CameraViewController.swift in Sources */,
-				D88635DA2D92EF5800C1D277 /* PerformanceCalculator.swift in Sources */,
+				D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */,
+				D88635DA2D92EF5800C1D277 /* HardwarePerformanceCalculator.swift in Sources */,
 				D8E827C42D70486800415E1E /* native_benchmarksApp.swift in Sources */,
 				D88635DC2D92F02200C1D277 /* BenchmarkRunner.swift in Sources */,
 			);

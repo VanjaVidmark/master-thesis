@@ -7,108 +7,87 @@
 
 import Foundation
 
-public typealias BenchConfigs = (
-    filename: String,
-    headerText: String,
-    headerDescription: String
-)
-
 class BenchmarkRunner {
-    private var activeBenchmark: GeolocationBenchmark?
+    private var filename = ""
+    private var serverURL = URL(string:"")
+    private var benchmark = ""
 
-    func run(benchmark: String, n: Int) {
-        print("Starting Benchmark: \(benchmark), n = \(n)")
-
-        // Setup benchmark config
-        let benchConfigs = BenchConfigs(
-            filename: "Native\(benchmark)BenchmarkResults.txt",
-            headerText: "Native \(benchmark) Benchmark",
-            headerDescription: "\nCPU | FPS | Frame Overrun (ms)| Memory (MB) | Timestamp\n---"
-        )
+    func run(benchmark: String) {
+        print("Starting Benchmark: \(benchmark)")
         
-        // Iphone
-        let serverURL = URL(string: "http://10.0.4.44:5050/upload")!
-        // simulator
-        //let serverURL = URL(string: "http://localhost:5050/upload")!
+        self.filename = "Native\(benchmark).txt"
         
-        let performanceCalculator = PerformanceCalculator(serverURL: serverURL, configs: benchConfigs)
-
+        self.serverURL = URL(string: "http://192.168.0.91:5050/upload")
+        //self.serverURL = URL(string: "http://localhost:5050/upload")!
+        
         switch benchmark {
         case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
-            runHardwareBenchmark(
-                benchmark: benchmark,
-                n: n,
-                performanceCalculator: performanceCalculator
-            )
+            runHardwareBenchmark(benchmark: benchmark)
 
         case "Scroll", "Visibility":
-            runUiBenchmark(
-                benchmark: benchmark,
-                n: n,
-                performanceCalculator: performanceCalculator
-            )
+            runUiBenchmark(benchmark: benchmark)
 
         default:
             print("Unsupported benchmark: \(benchmark)")
         }
     }
     
-    private func runHardwareBenchmark(benchmark: String, n: Int, performanceCalculator: PerformanceCalculator) {
-        /*
-        let geolocationBenchmark = GeolocationBenchmark()
-        // First pass (measuring time only)
-        let startTime = Date()
-        geolocationBenchmark.runBenchmark(n: n)
-        let duration = Date().timeIntervalSince(startTime)
-        print("First pass completed in \(duration) seconds.")
-
-        // Second pass (collecting metrics)
-        performanceCalculator.start(metricHandler: metricHandler)
-        geolocationBenchmark.runBenchmark(n: n)
-        performanceCalculator.pause()
-        metricHandler.stop()
-        print("\(benchmark) benchmark second pass finished, posted to server")
-         */
+    private func runHardwareBenchmark(benchmark: String) {
+        let performanceCalculator = HardwarePerformanceCalculator(serverURL: self.serverURL!, filename: filename)
+        
+        let warmup = 10
+        let iterations = 90
+        
         Task {
             switch benchmark {
             case "FileWrite":
-                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(n: n)
+                // First pass - measuring memory and CPU
+                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runWriteBenchmark(n: 1, measureTime: false)
+                
+                // Second pass - measuring time
+                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runWriteBenchmark(n: 1, measureTime: true)
   
             case "FileRead":
-                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(n: n)
+                // First pass - measuring memory and CPU
+                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runReadBenchmark(n: 1, measureTime: false)
+                
+                // Second pass - measuring time
+                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runReadBenchmark(n: 1, measureTime: true)
                 
             case "FileDelete":
-                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runDeleteBenchmark(n: n)
+                // First pass - measuring memory and CPU
+                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runDeleteBenchmark(n: 1, measureTime: false)
+                
+                // Second pass - measuring time
+                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runDeleteBenchmark(n: 1, measureTime: true)
                 
             case "Geolocation":
                 let startTime = Date()
                 performanceCalculator.start()
 
                 let geolocationBenchmark = GeolocationBenchmark()
-                self.activeBenchmark = geolocationBenchmark // RETAIN IT!
 
-                await geolocationBenchmark.runBenchmark(n: n)
+                await geolocationBenchmark.runBenchmark(n: 1)
 
-                performanceCalculator.pause()
+                performanceCalculator.stopAndPost(iteration: 1)
                 let duration = Date().timeIntervalSince(startTime)
                 print("Geolocation completed in \(duration) seconds.")
-
-                self.activeBenchmark = nil
-            /*
+    
             case "Camera":
-                let startTime = Date()
-                let cameraBenchmark = CameraBenchmark()
-                performanceCalculator.start()
+                // First pass - measuring memory and CPU
+                var cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
+                await cameraBenchmark.runBenchmark(n: 1, measureTime: false)
                 
-                cameraBenchmark.runBenchmark(n: n)
-                
-                performanceCalculator.pause()
-                let duration = Date().timeIntervalSince(startTime)
-                print("File write completed in \(duration) seconds.")
-                */
+                // Second pass - measuring time
+                cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
+                await cameraBenchmark.runBenchmark(n: 1, measureTime: true)
+
             default:
                 break
             }
@@ -116,7 +95,11 @@ class BenchmarkRunner {
         }
     }
 
-    private func runUiBenchmark(benchmark: String, n: Int, performanceCalculator: PerformanceCalculator) {
+    private func runUiBenchmark(benchmark: String) {
+        let performanceCalculator = UiPerformanceCalculator(serverURL: serverURL!, filename: filename)
+        
+        let duration = 30
+        
         Task {
             do {
                 performanceCalculator.start()
@@ -124,17 +107,17 @@ class BenchmarkRunner {
                 switch benchmark {
                 case "Scroll":
                     let scrollBenchmark = ScrollBenchmark()
-                    try await scrollBenchmark.runBenchmark(n: n)
+                    try await scrollBenchmark.runBenchmark(n: duration)
     
                 case "Visibility":
                     let visibilityBenchmark = VisibilityBenchmark()
-                    try await visibilityBenchmark.runBenchmark(n: n)
+                    try await visibilityBenchmark.runBenchmark(n: duration)
                      
                 default:
                     break
                 }
 
-                performanceCalculator.pause()
+                performanceCalculator.stopAndPost()
                 print("\(benchmark) benchmark finished and results posted to server")
 
             } catch {

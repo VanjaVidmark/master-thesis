@@ -17,19 +17,25 @@ struct ScrollScreen: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(alignment: .leading) {
-                    ForEach(0..<1000) { index in
-                        HStack {
-                            Image("example_img")
+                LazyVStack(alignment: .center) {
+                    ForEach(0..<100) { index in
+                        VStack(spacing: 8) {
+                            Image("img1mb")
                                 .resizable()
-                                .frame(width: 64, height: 64)
-                                .padding(.trailing, 8)
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 600, height: 400)
+                                .clipped()
+                                .frame(maxWidth: .infinity, alignment: .center) // Center horizontally
+
                             Text("Item \(index)")
-                            Spacer()
+                                .font(.system(size: 20))
+                                .padding(.bottom, 24)
+                                .multilineTextAlignment(.center)
                         }
-                        .padding(8)
+                        .padding(.vertical, 16)
                         .id(index)
                     }
+
                 }
             }
             .onReceive(controller.$isScrolling) { isScrolling in
@@ -45,12 +51,12 @@ struct ScrollScreen: View {
 
     func startScrolling(proxy: ScrollViewProxy) {
         scrollTarget = 0
-        timer = Timer.scheduledTimer(withTimeInterval: 0.015, repeats: true) { _ in
-            withAnimation(.linear(duration: 0.015)) {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { _ in
+            withAnimation(.linear(duration: 0.4)) {
                 proxy.scrollTo(scrollTarget, anchor: .top)
             }
-            scrollTarget += 10
-            if scrollTarget >= 999 {
+            scrollTarget += 1
+            if scrollTarget >= 99 {
                 scrollTarget = 0
             }
         }

@@ -2,5 +2,7 @@ package org.example.kmpbenchmarks
 
 interface PerformanceCalculator {
     fun start()
-    fun pause()
+    fun stopAndPost(iteration: Int)
+    fun sampleTime(label: String)
+    fun postTimeSamples()
 }

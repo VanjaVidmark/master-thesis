@@ -19,7 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-// Modified by Vanja Vidmark, 2025.
 // Source: https://github.com/dani-gavrilov/GDPerformanceView-Swift/blob/master/GDPerformanceView-Swift/GDPerformanceMonitoring
 //
 
@@ -81,21 +80,6 @@ internal extension LinkedFramesList {
         
         self.count += 1
         self.removeFrameNodes(olderThanTimestampMoreThanSecond: timestamp)
-    }
-    
-    // TODO: ADDED THIS MYSELF! EDIT? COMMENT?
-    func detectFrameJank() -> Int {
-        var jankCount = 0
-        var current = head
-        while let next = current?.next {
-            let delta = next.timestamp - current!.timestamp
-            // 1/60 = ~16.67ms, allow 20% over budget (~20ms)
-            if delta > (1.0 / 60.0)*1.1 {
-                jankCount += 1
-            }
-            current = next
-        }
-        return jankCount
     }
 }
 
