@@ -48,13 +48,6 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                 }) {
                     Text("Run READ file Benchmark")
                 }
-                Button(onClick = {
-                    scope.launch {
-                        benchmarkRunner.run(benchmark = "FileDelete")
-                    }
-                }) {
-                    Text("Run DELETE file Benchmark")
-                }
 
                 Button(onClick = {
                     scope.launch {

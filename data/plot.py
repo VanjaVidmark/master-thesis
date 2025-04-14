@@ -10,7 +10,7 @@ implementations = ["Kmp", "Native"]
 data = {}
 
 for impl in implementations:
-    filename = f"{impl}{benchmark}.txt"
+    filename = f"{impl}{benchmark}BenchmarkResults.txt"
     if not os.path.isfile(filename):
         raise FileNotFoundError(f"Could not find file: {filename}")
 
@@ -81,5 +81,19 @@ for ax in axs[1]:
 
 fig.suptitle(f"{benchmark} Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
+
+
+# New figure to plot time deltas
+plt.figure(figsize=(10, 4))
+for impl in implementations:
+    plt.plot(data[impl]["timestamp"][1:], data[impl]["time_deltas"], label=impl.upper(), linewidth=1.2)
+
+plt.title("Time Between Measurements")
+plt.xlabel("Seconds since start")
+plt.ylabel("Delta Time (s)")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
 plt.show()
 

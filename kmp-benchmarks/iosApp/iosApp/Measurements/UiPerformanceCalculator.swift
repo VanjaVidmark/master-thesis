@@ -67,7 +67,7 @@ internal extension UiPerformanceCalculator {
         self.stopAndSendMetrics()
     }
     
-    func postTimeSamples() {}
+    func postTime(duration: Double) {}
     
     func sampleTime(label: String) {}
 }

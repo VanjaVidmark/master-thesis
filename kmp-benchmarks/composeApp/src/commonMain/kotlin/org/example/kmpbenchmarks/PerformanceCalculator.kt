@@ -4,5 +4,5 @@ interface PerformanceCalculator {
     fun start()
     fun stopAndPost(iteration: Int)
     fun sampleTime(label: String)
-    fun postTimeSamples()
+    fun postTime(duration: Double)
 }

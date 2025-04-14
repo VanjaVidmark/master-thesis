@@ -42,31 +42,16 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
         Task {
             switch benchmark {
             case "FileWrite":
-                // First pass - measuring memory and CPU
                 var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(n: 1, measureTime: false)
-
-                // Second pass - measuring time
-                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(n: 1, measureTime: true)
-
+                fileBenchmark.runWriteBenchmark(n: Int32(iterations))
+  
             case "FileRead":
-                // First pass - measuring memory and CPU
                 var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(n: 1, measureTime: false)
-
-                // Second pass - measuring time
-                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(n: 1, measureTime: true)
-
-            case "FileDelete":
-                // First pass - measuring memory and CPU
+                fileBenchmark.runReadBenchmark(n: Int32(iterations))
+                
+            /*case "FileDelete":
                 var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runDeleteBenchmark(n: 1, measureTime: false)
-
-                // Second pass - measuring time
-                fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runDeleteBenchmark(n: 1, measureTime: true)
+                fileBenchmark.runDeleteBenchmark(n: iterations)*/
 
             case "Geolocation":
                 let startTime = Date()

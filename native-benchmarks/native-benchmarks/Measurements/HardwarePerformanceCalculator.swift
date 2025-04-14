@@ -68,20 +68,10 @@ internal extension HardwarePerformanceCalculator {
         self.startTimestamp = nil
         self.stopAndSendMetrics(iteration: iteration)
     }
-    /// Samples a single timestamp
-    func sampleTime(_ label: String) {
-        let timestamp = Date().timeIntervalSince1970
-        timeSampleQueue.async(flags: .barrier) {
-            self.timeSamples.append((label: label, timestamp: timestamp))
-        }
-    }
-    /// Posts timestamps and clears timestamp queue
-    func postTimeSamples() {
-        timeSampleQueue.sync(flags: .barrier) {
-            let formatted = timeSamples.map { "\($0.label) | \($0.timestamp)" }.joined(separator: "\n")
-            postToServer(metrics: formatted, filename: "Time"+filename, append: false)
-            self.timeSamples.removeAll()
-        }
+
+    /// Appends time to the measurements file
+    func postTime(duration: Double) {
+        postToServer(metrics: "\nExecution time: \(duration)\n", filename: filename, append: true)
     }
 }
 
@@ -187,7 +177,8 @@ private extension HardwarePerformanceCalculator {
         queue.sync(flags: .barrier) {
             let header = "\n--- ITERATION \(iteration) ---\n"
             let allMetrics = buffer.joined(separator: "\n")
-            postToServer(metrics: allMetrics + header, filename: filename, append: iteration > 0)
+            postToServer(metrics: header + allMetrics, filename: filename, append: iteration > 0)
+            buffer.removeAll()
         }
     }
     

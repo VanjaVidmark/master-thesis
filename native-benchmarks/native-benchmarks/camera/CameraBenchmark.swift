@@ -31,7 +31,7 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
 
                     self.benchmarkFinished = {
                         if self.measureTime {
-                            self.performanceCalculator.postTimeSamples()
+                            // self.performanceCalculator.postTimeSamples()
                         } else {
                             self.performanceCalculator.stopAndPost(iteration: 1)
                         }
@@ -102,7 +102,7 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
         }
         // Making time measurements after 10 warmup rounds
         if measureTime && photosTaken >= 10 {
-            performanceCalculator.sampleTime("\(photosTaken) start")
+            // performanceCalculator.sampleTime("\(photosTaken) start")
         }
         
         let output = photoOutput!
@@ -134,7 +134,9 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
             }) { success, error in
                 if success {
                     print("Saved photo \(self.photosTaken)")
-                    if self.measureTime && self.photosTaken >= 10 { self.performanceCalculator.sampleTime("\(self.photosTaken) end") }
+                    if self.measureTime && self.photosTaken >= 10 {
+                        // self.performanceCalculator.sampleTime("\(self.photosTaken) end")
+                    }
                     self.photosTaken += 1
                     self.captureQueue.async {
                         self.captureNextPhoto()

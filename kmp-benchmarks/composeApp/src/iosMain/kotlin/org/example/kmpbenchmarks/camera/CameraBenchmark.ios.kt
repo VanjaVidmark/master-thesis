@@ -30,7 +30,7 @@ actual suspend fun runCameraBenchmark(n: Int, measureTime: Boolean, performanceC
 
         benchmarkFinished = {
             if (measureTime) {
-                performanceCalculator.postTimeSamples()
+                // performanceCalculator.postTimeSamples()
             } else {
                 performanceCalculator.stopAndPost(iteration = 1)
             }
