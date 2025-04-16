@@ -7,35 +7,32 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
     private var photoOutput: AVCapturePhotoOutput?
     private var captureQueue = DispatchQueue(label: "camera-capture-queue")
 
-    private var photosTaken = 0
-    private var totalPhotots = 0
-    private var benchmarkStartTime: CFAbsoluteTime = 0
     private var benchmarkFinished: (() -> Void)? = nil
     private let performanceCalculator: HardwarePerformanceCalculator
     private var measureTime = false
+    private var n = 0
+    private var warmup = 0
+    private var photosTaken = 0
+    private var totalPhotots = 0
+    private var runStartTime: CFAbsoluteTime = 0
 
     init(performanceCalculator: HardwarePerformanceCalculator) {
         self.performanceCalculator = performanceCalculator
     }
 
-    func runBenchmark(n: Int, measureTime: Bool) async {
-        self.measureTime = measureTime
+    func runBenchmark(warmup: Int, n: Int) async {
+        self.n = n
+        self.warmup = warmup
+        self.totalPhotots = n + warmup
+        
         await withCheckedContinuation { continuation in
             captureQueue.async {
                 self.prepareSession()
                 self.startSessionAndWarmUp {
                     print("Camera ready. Starting photo benchmark of \(n) photos.")
 
-                    self.totalPhotots = n
-                    self.benchmarkStartTime = CFAbsoluteTimeGetCurrent()
-
                     self.benchmarkFinished = {
-                        if self.measureTime {
-                            // self.performanceCalculator.postTimeSamples()
-                        } else {
-                            self.performanceCalculator.stopAndPost(iteration: 1)
-                        }
-                        print("Benchmark complete. Took \(self.benchmarkDuration()) seconds.")
+                        print("Benchmark complete")
                         continuation.resume()
                     }
 
@@ -90,28 +87,25 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
 
     private func captureNextPhoto() {
         
+        // stop if all photos are taken or photo was not succesful
         if totalPhotots - photosTaken <= 0 || photoOutput == nil {
             cleanup()
             benchmarkFinished?()
             benchmarkFinished = nil
             return
         }
-        // Starting performance measurements after 10 warmup rounds
-        if !measureTime && photosTaken == 10 {
+        // Starting performance measurements after warmup rounds
+        if !measureTime && photosTaken >= warmup {
             performanceCalculator.start()
         }
-        // Making time measurements after 10 warmup rounds
-        if measureTime && photosTaken >= 10 {
-            // performanceCalculator.sampleTime("\(photosTaken) start")
+        // Making time measurements after warmup rounds
+        if measureTime && photosTaken >= warmup {
+            self.runStartTime = CFAbsoluteTimeGetCurrent()
         }
         
         let output = photoOutput!
         let settings = AVCapturePhotoSettings()
         output.capturePhoto(with: settings, delegate: self)
-    }
-
-    private func benchmarkDuration() -> Double {
-        CFAbsoluteTimeGetCurrent() - benchmarkStartTime
     }
 
     func photoOutput(_ output: AVCapturePhotoOutput,
@@ -134,10 +128,27 @@ class CameraBenchmark: NSObject, AVCapturePhotoCaptureDelegate {
             }) { success, error in
                 if success {
                     print("Saved photo \(self.photosTaken)")
-                    if self.measureTime && self.photosTaken >= 10 {
-                        // self.performanceCalculator.sampleTime("\(self.photosTaken) end")
+                    let measuredTime = self.measureTime
+                    
+                    // Firtst pass: Save performance metrics, and measure time next pass
+                    if !measuredTime && self.photosTaken >= self.warmup {
+                        self.performanceCalculator.stopAndPost(iteration: self.photosTaken-self.warmup)
+                        self.measureTime = true
                     }
-                    self.photosTaken += 1
+                    
+                    // Second pass: Save time metrics, and measure performance next pass
+                    if measuredTime && self.photosTaken >= self.warmup {
+                        let duration = CFAbsoluteTimeGetCurrent() - self.runStartTime
+                        self.performanceCalculator.postTime(duration: duration)
+                        self.measureTime = false
+                        self.photosTaken += 1
+                    }
+                    
+                    // Increment photo count during warmup
+                    if (self.photosTaken < self.warmup) {
+                        self.photosTaken += 1
+                    }
+                    
                     self.captureQueue.async {
                         self.captureNextPhoto()
                     }

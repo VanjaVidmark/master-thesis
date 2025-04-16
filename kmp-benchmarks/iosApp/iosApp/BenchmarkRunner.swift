@@ -36,18 +36,18 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
     private func runHardwareBenchmark(benchmark: String) {
         let performanceCalculator = HardwarePerformanceCalculator(serverURL: serverURL!, filename: filename)
         
-        let warmup = 10
-        let iterations = 90
+        let warmup = 3
+        let iterations = 7
 
         Task {
             switch benchmark {
             case "FileWrite":
-                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(n: Int32(iterations))
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runWriteBenchmark(warmup: Int32(warmup),n: Int32(iterations))
   
             case "FileRead":
-                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(n: Int32(iterations))
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runReadBenchmark(warmup: Int32(warmup), n: Int32(iterations))
                 
             /*case "FileDelete":
                 var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
@@ -66,13 +66,8 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
                 print("Geolocation completed in \(duration) seconds.")
 
             case "Camera":
-                // First pass - measuring memory and CPU
-                var cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
-                try? await cameraBenchmark.runBenchmark(n: 1, measureTime: false)
-
-                // Second pass - measuring time
-                cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
-                try? await cameraBenchmark.runBenchmark(n: 1, measureTime: true)
+                let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
+                try? await cameraBenchmark.runBenchmark(warmup: Int32(warmup), n: Int32(iterations))
 
             default:
                 break

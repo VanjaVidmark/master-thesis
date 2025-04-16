@@ -42,9 +42,9 @@ class FileOperationsBenchmark {
         try? fileManager.removeItem(at: url)
     }
     
-    func runWriteBenchmark(n: Int) {
+    func runWriteBenchmark(warmup: Int, n: Int) {
         // warmup rounds
-        for i in 0..<10 {
+        for i in 0..<warmup {
             self.write(index: i, data: data)
             self.delete(index: i)
         }
@@ -67,9 +67,9 @@ class FileOperationsBenchmark {
         print("File write done")
     }
     
-    func runReadBenchmark(n: Int) {
+    func runReadBenchmark(warmup: Int, n: Int) {
         // warmup rounds
-        for i in 0..<10 {
+        for i in 0..<warmup {
             self.write(index: i, data: data)
             self.read(index: i)
             self.delete(index: i)

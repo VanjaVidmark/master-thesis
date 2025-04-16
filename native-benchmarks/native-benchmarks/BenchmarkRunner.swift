@@ -35,18 +35,18 @@ class BenchmarkRunner {
     private func runHardwareBenchmark(benchmark: String) {
         let performanceCalculator = HardwarePerformanceCalculator(serverURL: self.serverURL!, filename: filename)
         
-        let warmup = 10
-        let iterations = 90
+        let warmup = 3
+        let iterations = 7
         
         Task {
             switch benchmark {
             case "FileWrite":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(n: iterations)
+                fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations)
   
             case "FileRead":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(n: iterations)
+                fileBenchmark.runReadBenchmark(warmup: warmup, n: iterations)
                 
             /*case "FileDelete":
                 var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
@@ -65,13 +65,8 @@ class BenchmarkRunner {
                 print("Geolocation completed in \(duration) seconds.")
     
             case "Camera":
-                // First pass - measuring memory and CPU
-                var cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
-                await cameraBenchmark.runBenchmark(n: 1, measureTime: false)
-                
-                // Second pass - measuring time
-                cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
-                await cameraBenchmark.runBenchmark(n: 1, measureTime: true)
+                let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
+                await cameraBenchmark.runBenchmark(warmup: warmup, n: iterations)
 
             default:
                 break

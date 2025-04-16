@@ -9,37 +9,50 @@ import kotlin.coroutines.resume
 
 private var captureSession: AVCaptureSession? = null
 private var photoOutput: AVCapturePhotoOutput? = null
-private var totalPhotos: Int = 0
-private var photosTaken: Int = 0
-private var measureTimeFlag: Boolean = false
+private var delegate: CameraPhotoDelegate? = null
 private var calculator: PerformanceCalculator? = null
 private var benchmarkFinished: (() -> Unit)? = null
 
+private var measurementRuns: Int = 0
+private var warmupRuns: Int = 0
+private var totalPhotos: Int = 0
+private var photosTaken: Int = 0
+private var runStartTime: NSDate? = null
+private var measureTimeFlag: Boolean = false
+
 actual suspend fun prepareCameraSessionAndWarmUp() {
+    resetState()
     setupSession()
     startSessionAndWarmUp()
 }
 
-actual suspend fun runCameraBenchmark(n: Int, measureTime: Boolean, performanceCalculator: PerformanceCalculator) {
+actual suspend fun runCameraBenchmark(warmup: Int, n: Int, performanceCalculator: PerformanceCalculator) {
     return suspendCancellableCoroutine { cont ->
         println("Camera ready. Starting photo benchmark of $n photos.")
-        totalPhotos = n
-        photosTaken = 0
-        measureTimeFlag = measureTime
+        measurementRuns = n
+        warmupRuns = warmup
+        totalPhotos = n + warmup
         calculator = performanceCalculator
 
         benchmarkFinished = {
-            if (measureTime) {
-                // performanceCalculator.postTimeSamples()
-            } else {
-                performanceCalculator.stopAndPost(iteration = 1)
-            }
             println("Camera KMP benchmark complete.")
             cont.resume(Unit)
         }
-
-        takeNextPhoto()
+        captureNextPhoto()
     }
+}
+
+private fun resetState() {
+    delegate = null
+    calculator = null
+    benchmarkFinished = null
+
+    measurementRuns = 0
+    warmupRuns = 0
+    totalPhotos = 0
+    photosTaken = 0
+    runStartTime = null
+    measureTimeFlag = false
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -74,34 +87,48 @@ private fun startSessionAndWarmUp() {
     }
 }
 
-private fun takeNextPhoto() {
+private fun captureNextPhoto() {
     if (totalPhotos - photosTaken <= 0) {
         cleanup()
         benchmarkFinished?.invoke()
         benchmarkFinished = null
         return
     }
-
-    if (!measureTimeFlag && photosTaken == 10) {
+    // Starting performance measurements after warmup rounds
+    if (!measureTimeFlag && photosTaken >= warmupRuns) {
         calculator?.start()
     }
 
-    if (measureTimeFlag && photosTaken >= 10) {
-        calculator?.sampleTime("$photosTaken start")
+    // Making time measurements after warmup rounds
+    if (measureTimeFlag && photosTaken >= warmupRuns) {
+        runStartTime = NSDate()
     }
 
     val settings = AVCapturePhotoSettings()
-    val delegate = CameraPhotoDelegate {
-        if (measureTimeFlag && photosTaken >= 10) {
-            calculator?.sampleTime("$photosTaken end")
-        }
+    delegate = CameraPhotoDelegate {
+        val measuredTime = measureTimeFlag
         println("Photo $photosTaken saved")
 
-        photosTaken++
-        takeNextPhoto()
+        // Firtst pass: Save performance metrics, and measure time next pass
+        if (!measuredTime && photosTaken >= warmupRuns) {
+            calculator?.stopAndPost(photosTaken - warmupRuns)
+            measureTimeFlag = true
+        }
+        // Second pass: Save time metrics, and measure performance next pass
+        if (measuredTime && photosTaken >= warmupRuns) {
+            val duration = NSDate().timeIntervalSinceDate(runStartTime!!)
+            calculator?.postTime(duration)
+            measureTimeFlag = false
+            photosTaken++
+        }
+        // Increment photo count during warmup
+        if (photosTaken < warmupRuns) {
+            photosTaken++
+        }
+        captureNextPhoto()
     }
 
-    photoOutput?.capturePhotoWithSettings(settings, delegate)
+    photoOutput?.capturePhotoWithSettings(settings, delegate!!)
 }
 
 private fun cleanup() {

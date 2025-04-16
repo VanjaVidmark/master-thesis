@@ -14,9 +14,9 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         Random.nextBytes(this)
     }
 
-    fun runWriteBenchmark(n: Int) {
+    fun runWriteBenchmark(warmup: Int, n: Int) {
         // Warmup rounds
-        for (i in 0 until 10) {
+        for (i in 0 until warmup) {
             write(i, data)
             delete(i)
         }
@@ -38,9 +38,9 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         println("File write done")
     }
 
-    fun runReadBenchmark(n: Int) {
+    fun runReadBenchmark(warmup: Int, n: Int) {
         // Warmup rounds
-        for (i in 0 until 10) {
+        for (i in 0 until warmup) {
             write(i, data)
             delete(i)
         }

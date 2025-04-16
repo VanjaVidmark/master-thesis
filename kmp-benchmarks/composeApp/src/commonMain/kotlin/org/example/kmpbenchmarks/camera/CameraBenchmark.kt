@@ -3,12 +3,12 @@ package org.example.kmpbenchmarks.camera
 import org.example.kmpbenchmarks.PerformanceCalculator
 
 expect suspend fun prepareCameraSessionAndWarmUp()
-expect suspend fun runCameraBenchmark(n: Int, measureTime: Boolean, performanceCalculator: PerformanceCalculator)
+expect suspend fun runCameraBenchmark(warmup: Int, n: Int, performanceCalculator: PerformanceCalculator)
 
 class CameraBenchmark(private val performanceCalculator: PerformanceCalculator) {
 
-    suspend fun runBenchmark(n: Int, measureTime: Boolean) {
+    suspend fun runBenchmark(warmup: Int, n: Int) {
         prepareCameraSessionAndWarmUp()
-        runCameraBenchmark(n, measureTime, performanceCalculator)
+        runCameraBenchmark(warmup, n, performanceCalculator)
     }
 }
