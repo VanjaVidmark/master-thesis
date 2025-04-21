@@ -24,7 +24,7 @@ class BenchmarkRunner {
         case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
             runHardwareBenchmark(benchmark: benchmark)
 
-        case "Scroll", "Visibility":
+        case "Scroll", "Visibility", "Combined":
             runUiBenchmark(benchmark: benchmark)
 
         default:
@@ -82,23 +82,27 @@ class BenchmarkRunner {
         
         Task {
             do {
-                performanceCalculator.start()
-
                 switch benchmark {
                 case "Scroll":
+                    performanceCalculator.start()
                     let scrollBenchmark = ScrollBenchmark()
                     try await scrollBenchmark.runBenchmark(n: duration)
+                    performanceCalculator.stopAndPost()
     
                 case "Visibility":
+                    performanceCalculator.start()
                     let visibilityBenchmark = VisibilityBenchmark()
                     try await visibilityBenchmark.runBenchmark(n: duration)
+                    performanceCalculator.stopAndPost()
+                
+                case "Combined":
+                    let combined = CombinedBenchmark(performanceCalculator: performanceCalculator)
+                    try await combined.runBenchmark(warmup: 3, n: 7)
+
                      
                 default:
                     break
                 }
-
-                performanceCalculator.stopAndPost()
-                print("\(benchmark) benchmark finished and results posted to server")
 
             } catch {
                 print("\(benchmark) benchmark failed: \(error)")

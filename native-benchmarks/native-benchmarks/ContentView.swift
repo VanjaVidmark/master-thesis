@@ -51,17 +51,17 @@ struct ContentView: View {
                         benchmarkRunner.run(benchmark: "FileDelete")
                     }
                     .buttonStyle(.borderedProminent)*/
-                    /*
-                    Button("Open Camera") {
-                        showCamera = true
+
+                    Button("Run Combined Benchmark") {
+                        currentScreen = "Combined"
+                        benchmarkRunner.run(benchmark: "Combined")
                     }
-                    .fullScreenCover(isPresented: $showCamera) {
-                        CameraView()
-                    }*/
+                    .buttonStyle(.borderedProminent)
                     
                     Button("Run Camera Benchmark") {
                         benchmarkRunner.run(benchmark: "Camera")
                     }
+                    .buttonStyle(.borderedProminent)
                     
                     Button("Run Scroll Benchmark") {
                         currentScreen = "Scroll"
