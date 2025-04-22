@@ -48,7 +48,7 @@ fun ScrollScreen(onDone: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         state = listState,
-        horizontalAlignment = Alignment.CenterHorizontally // Center image + text
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(100) { index ->
             Column(

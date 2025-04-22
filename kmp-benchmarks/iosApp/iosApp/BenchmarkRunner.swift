@@ -4,7 +4,7 @@
 //
 //  Created by Vanja Vidmark on 2025-03-18.
 //
-
+/*
 import Foundation
 import ComposeApp
 
@@ -25,7 +25,7 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
         case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
             runHardwareBenchmark(benchmark: benchmark)
 
-        case "Scroll", "Visibility":
+        case "Scroll", "Visibility", "IdleState":
             runUiBenchmark(benchmark: benchmark)
 
         default:
@@ -83,8 +83,7 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
 
         Task {
             do {
-                performanceCalculator.start()
-                
+                performanceCalculator.start()                
                 switch benchmark {
                 case "Scroll":
                     let scrollBenchmark = ScrollBenchmark()
@@ -93,6 +92,9 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
                 case "Visibility":
                     let visibilityBenchmark = VisibilityBenchmark()
                     try await visibilityBenchmark.runBenchmark(n: Int32(duration))
+                    
+                case "IdleState":
+                    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
 
                 default:
                     break
@@ -105,4 +107,4 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
             }
         }
     }
-}
+}*/

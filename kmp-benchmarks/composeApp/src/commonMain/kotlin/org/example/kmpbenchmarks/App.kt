@@ -14,9 +14,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun App(benchmarkRunner: BenchmarkRunner) {
+fun App() {
     var currentScreen by remember { mutableStateOf("Home") }
     val scope = rememberCoroutineScope()
+    val benchmarkRunner = BenchmarkRunner()
 
     MaterialTheme {
         when (currentScreen) {
@@ -24,7 +25,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                /*
                 Button(onClick = {
                     scope.launch {
                         GeolocationBenchmark().runBenchmark(n = 1) // just fetch location once as warmup
@@ -32,7 +33,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                     }
                 }) {
                     Text("Run Geolocation Benchmark")
-                }
+                }*/
 
                 Button(onClick = {
                     scope.launch {
@@ -73,6 +74,13 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                     }
                 }) {
                     Text("Run Visibility Benchmark")
+                }
+                Button(onClick = {
+                    scope.launch {
+                        benchmarkRunner.run(benchmark = "IdleState")
+                    }
+                }) {
+                    Text("Sample idle state memory")
                 }
             }
 

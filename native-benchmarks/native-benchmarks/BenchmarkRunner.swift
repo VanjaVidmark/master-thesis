@@ -24,7 +24,7 @@ class BenchmarkRunner {
         case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
             runHardwareBenchmark(benchmark: benchmark)
 
-        case "Scroll", "Visibility", "Combined":
+        case "Scroll", "Visibility", "Combined", "IdleState":
             runUiBenchmark(benchmark: benchmark)
 
         default:
@@ -98,8 +98,12 @@ class BenchmarkRunner {
                 case "Combined":
                     let combined = CombinedBenchmark(performanceCalculator: performanceCalculator)
                     try await combined.runBenchmark(warmup: 3, n: 7)
+                    
+                case "IdleState":
+                    performanceCalculator.start()
+                    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+                    performanceCalculator.stopAndPost()
 
-                     
                 default:
                     break
                 }

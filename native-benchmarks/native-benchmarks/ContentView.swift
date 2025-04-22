@@ -74,6 +74,11 @@ struct ContentView: View {
                         benchmarkRunner.run(benchmark: "Visibility")
                     }
                     .buttonStyle(.borderedProminent)
+                    
+                    Button("Sample idle state memory") {
+                        benchmarkRunner.run(benchmark: "IdleState")
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 .padding()
             }
