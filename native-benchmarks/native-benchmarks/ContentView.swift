@@ -1,86 +1,85 @@
-//
-//  ContentView.swift
-//  native-benchmarks
-//
-//  Created by Vanja Vidmark on 2025-02-27.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    @State private var currentScreen: String = "Home"
+    @State private var currentScreen: String = "Tabs"
+    @State private var selectedTab: String = "Hardware"
     let benchmarkRunner = BenchmarkRunner()
-    @State private var showCamera = false
 
     var body: some View {
         VStack {
             switch currentScreen {
             case "Scroll":
                 ScrollScreen {
-                    currentScreen = "Home"
+                    currentScreen = "Tabs"
                 }
+
             case "Visibility":
                 VisibilityScreen {
-                    currentScreen = "Home"
+                    currentScreen = "Tabs"
                 }
 
             default:
-                VStack(spacing: 20) {
-                    /*
-                    Button("Run Geolocation Benchmark") {
-                        Task {
-                            let warmup = GeolocationBenchmark()
-                            await warmup.runBenchmark(n: 2)
+                TabView(selection: $selectedTab) {
+                    
+                    // MARK: Hardware Tab
+                    VStack(spacing: 20) {
+                        Button("Run Camera Benchmark") {
+                            benchmarkRunner.run(benchmark: "Camera")
                         }
-                        benchmarkRunner.run(benchmark: "Geolocation", n: 100)
-                    }
-                    .buttonStyle(.borderedProminent)*/
+                        .buttonStyle(.borderedProminent)
 
-                    
-                    Button("Run File WRITE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileWrite")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Run File READ Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileRead")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    /*
-                    Button("Run File DELETE Benchmark") {
-                        benchmarkRunner.run(benchmark: "FileDelete")
-                    }
-                    .buttonStyle(.borderedProminent)*/
+                        Button("Run WRITE file Benchmark") {
+                            benchmarkRunner.run(benchmark: "FileWrite")
+                        }
+                        .buttonStyle(.borderedProminent)
 
-                    Button("Run Combined Benchmark") {
-                        currentScreen = "Combined"
-                        benchmarkRunner.run(benchmark: "Combined")
+                        Button("Run READ file Benchmark") {
+                            benchmarkRunner.run(benchmark: "FileRead")
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Run Camera Benchmark") {
-                        benchmarkRunner.run(benchmark: "Camera")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.white)
+                    .tag("Hardware")
+                    .tabItem {
+                        Label("Hardware", systemImage: "phone")
                     }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Run Scroll Benchmark") {
-                        currentScreen = "Scroll"
-                        benchmarkRunner.run(benchmark: "Scroll")
-                    }
-                    .buttonStyle(.borderedProminent)
 
-                    Button("Run Visibility Benchmark") {
-                        currentScreen = "Visibility"
-                        benchmarkRunner.run(benchmark: "Visibility")
+                    // UI Tab
+                    VStack(spacing: 20) {
+                        Button("Run Scroll Benchmark") {
+                            currentScreen = "Scroll"
+                            benchmarkRunner.run(benchmark: "Scroll")
+                        }
+                        .buttonStyle(.borderedProminent)
+
+                        Button("Run Visibility Benchmark") {
+                            currentScreen = "Visibility"
+                            benchmarkRunner.run(benchmark: "Visibility")
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Button("Sample idle state memory") {
-                        benchmarkRunner.run(benchmark: "IdleState")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.white)
+                    .tag("UI")
+                    .tabItem {
+                        Label("UI", systemImage: "person")
                     }
-                    .buttonStyle(.borderedProminent)
+
+                    // Other Tab
+                    VStack(spacing: 20) {
+                        Button("Sample idle state memory") {
+                            benchmarkRunner.run(benchmark: "IdleState")
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.white)
+                    .tag("Other")
+                    .tabItem {
+                        Label("Other", systemImage: "line.3.horizontal")
+                    }
                 }
-                .padding()
             }
         }
     }
