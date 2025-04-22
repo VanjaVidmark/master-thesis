@@ -69,7 +69,6 @@ internal extension UiPerformanceCalculator {
     
     func postTime(duration: Double) {}
     
-    func sampleTime(label: String) {}
 }
 
 // MARK: Timer Actions

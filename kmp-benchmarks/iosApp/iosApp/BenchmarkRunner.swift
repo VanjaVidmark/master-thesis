@@ -4,7 +4,7 @@
 //
 //  Created by Vanja Vidmark on 2025-03-18.
 //
-/*
+
 import Foundation
 import ComposeApp
 
@@ -19,10 +19,9 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
       self.filename = "Kmp\(benchmark).txt"
         
       self.serverURL = URL(string: "http://192.168.0.91:5050/upload")
-      //self.serverURL = URL(string: "http://localhost:5050/upload")!
 
         switch benchmark {
-        case "Geolocation", "FileWrite", "FileRead", "FileDelete", "Camera":
+        case "Geolocation", "FileWrite", "FileRead", "Camera":
             runHardwareBenchmark(benchmark: benchmark)
 
         case "Scroll", "Visibility", "IdleState":
@@ -48,10 +47,6 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
             case "FileRead":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
                 fileBenchmark.runReadBenchmark(warmup: Int32(warmup), n: Int32(iterations))
-                
-            /*case "FileDelete":
-                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runDeleteBenchmark(n: iterations)*/
 
             case "Geolocation":
                 let startTime = Date()
@@ -107,4 +102,4 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
             }
         }
     }
-}*/
+}

@@ -69,14 +69,6 @@ internal extension HardwarePerformanceCalculator {
         self.startTimestamp = nil
         self.stopAndSendMetrics(iteration: Int(iteration))
     }
-    // REMOVE?
-    /// Samples a single timestamp
-    func sampleTime(label: String) {
-        let timestamp = Date().timeIntervalSince1970
-        timeSampleQueue.async(flags: .barrier) {
-            self.timeSamples.append((label: label, timestamp: timestamp))
-        }
-    }
     
     /// Posts timestamps and clears timestamp queue
     func postTime(duration: Double) {

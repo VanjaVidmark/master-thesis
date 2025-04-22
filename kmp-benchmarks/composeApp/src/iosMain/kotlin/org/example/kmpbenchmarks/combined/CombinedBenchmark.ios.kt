@@ -8,7 +8,7 @@ import platform.UIKit.UIImage
 import platform.Photos.*
 import kotlin.coroutines.resume
 import kotlinx.cinterop.*
-import org.example.kmpbenchmarks.UiPerformanceCalculator
+import org.example.kmpbenchmarks.PerformanceCalculator
 import org.example.kmpbenchmarks.file.write
 import org.example.kmpbenchmarks.file.read
 import org.example.kmpbenchmarks.file.delete
@@ -18,7 +18,7 @@ private var warmup = 0
 private var total = 0
 private var measurePass = false
 private var startTime: NSDate? = null
-private var calculator: UiPerformanceCalculator? = null
+private var calculator: PerformanceCalculator? = null
 /*
 actual suspend fun runCombinedBenchmark(warmup: Int, n: Int, performanceCalculator: PerformanceCalculator) {
     warmup = warmup

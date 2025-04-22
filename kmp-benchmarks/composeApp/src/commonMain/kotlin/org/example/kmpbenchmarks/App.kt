@@ -14,10 +14,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun App() {
+fun App(benchmarkRunner: BenchmarkRunner) {
     var currentScreen by remember { mutableStateOf("Home") }
     val scope = rememberCoroutineScope()
-    val benchmarkRunner = BenchmarkRunner()
 
     MaterialTheme {
         when (currentScreen) {
