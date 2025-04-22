@@ -47,22 +47,6 @@ class BenchmarkRunner {
             case "FileRead":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
                 fileBenchmark.runReadBenchmark(warmup: warmup, n: iterations)
-                
-            /*case "FileDelete":
-                var fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runDeleteBenchmark(n: iterations)*/
-                
-            case "Geolocation":
-                let startTime = Date()
-                performanceCalculator.start()
-
-                let geolocationBenchmark = GeolocationBenchmark()
-
-                await geolocationBenchmark.runBenchmark(n: 1)
-
-                performanceCalculator.stopAndPost(iteration: 1)
-                let duration = Date().timeIntervalSince(startTime)
-                print("Geolocation completed in \(duration) seconds.")
     
             case "Camera":
                 let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)

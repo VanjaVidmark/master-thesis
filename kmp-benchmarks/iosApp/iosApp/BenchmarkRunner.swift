@@ -48,18 +48,6 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
                 fileBenchmark.runReadBenchmark(warmup: Int32(warmup), n: Int32(iterations))
 
-            case "Geolocation":
-                let startTime = Date()
-                performanceCalculator.start()
-
-                let geolocationBenchmark = GeolocationBenchmark()
-
-                try? await geolocationBenchmark.runBenchmark(n: 1)
-
-                performanceCalculator.stopAndPost(iteration: 1)
-                let duration = Date().timeIntervalSince(startTime)
-                print("Geolocation completed in \(duration) seconds.")
-
             case "Camera":
                 let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
                 try? await cameraBenchmark.runBenchmark(warmup: Int32(warmup), n: Int32(iterations))

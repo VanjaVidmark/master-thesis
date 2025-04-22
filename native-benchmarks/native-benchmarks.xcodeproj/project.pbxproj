@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */; };
 		D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */; };
 		D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE20E2DA11B070029ED5C /* CameraBenchmark.swift */; };
 		D86CE2122DA558480029ED5C /* UiPerformanceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86CE2112DA558480029ED5C /* UiPerformanceCalculator.swift */; };
@@ -43,7 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeolocationBenchmark.swift; sourceTree = "<group>"; };
 		D82C9E0C2D9BDE0700959526 /* FileOperationsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOperationsBenchmark.swift; sourceTree = "<group>"; };
 		D86CE2092D9D5FCF0029ED5C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D86CE20E2DA11B070029ED5C /* CameraBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraBenchmark.swift; sourceTree = "<group>"; };
@@ -90,14 +88,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D82C9E082D9AB60900959526 /* geolocation */ = {
-			isa = PBXGroup;
-			children = (
-				D82C9E092D9AB62B00959526 /* GeolocationBenchmark.swift */,
-			);
-			path = geolocation;
-			sourceTree = "<group>";
-		};
 		D82C9E0B2D9BDDDC00959526 /* file */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,7 +165,6 @@
 				D86CE2092D9D5FCF0029ED5C /* Info.plist */,
 				D86CE2062D9D5CE00029ED5C /* camera */,
 				D82C9E0B2D9BDDDC00959526 /* file */,
-				D82C9E082D9AB60900959526 /* geolocation */,
 				D8BCCD512D94299400479E91 /* visibility */,
 				D88635DF2D92F58800C1D277 /* scroll */,
 				D88635DB2D92F02200C1D277 /* BenchmarkRunner.swift */,
@@ -334,7 +323,6 @@
 				D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */,
 				D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */,
 				D8FC9B752DB6AC94006E23A7 /* CombinedViewController.swift in Sources */,
-				D82C9E0A2D9AB62B00959526 /* GeolocationBenchmark.swift in Sources */,
 				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
 				D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */,
 				D88635DA2D92EF5800C1D277 /* HardwarePerformanceCalculator.swift in Sources */,

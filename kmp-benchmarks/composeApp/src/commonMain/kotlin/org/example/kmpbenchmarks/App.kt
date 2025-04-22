@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
-import org.example.kmpbenchmarks.geolocation.GeolocationBenchmark
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
