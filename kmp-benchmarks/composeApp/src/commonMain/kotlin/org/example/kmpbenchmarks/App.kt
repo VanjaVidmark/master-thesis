@@ -67,11 +67,11 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
                         Button(onClick = {
                             scope.launch { benchmarkRunner.run("FileWrite") }
-                        }) { Text("Run WRITE file Benchmark") }
+                        }) { Text("Run File Write Benchmark") }
 
                         Button(onClick = {
                             scope.launch { benchmarkRunner.run("FileRead") }
-                        }) { Text("Run READ file Benchmark") }
+                        }) { Text("Run File Read Benchmark") }
                     }
 
                     "UI" -> Column(

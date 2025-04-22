@@ -1,4 +1,0 @@
-Native Geolocation Benchmark
-CPU | FPS | Frame Overrun (ms)| Memory (MB) | Timestamp
----
-0.0 | 1 | 0.0 | 13.094367980957031 | 108066.0259437917

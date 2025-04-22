@@ -28,12 +28,12 @@ struct ContentView: View {
                         }
                         .buttonStyle(.borderedProminent)
 
-                        Button("Run WRITE file Benchmark") {
+                        Button("Run File Write Benchmark") {
                             benchmarkRunner.run(benchmark: "FileWrite")
                         }
                         .buttonStyle(.borderedProminent)
 
-                        Button("Run READ file Benchmark") {
+                        Button("Run File Read Benchmark") {
                             benchmarkRunner.run(benchmark: "FileRead")
                         }
                         .buttonStyle(.borderedProminent)
