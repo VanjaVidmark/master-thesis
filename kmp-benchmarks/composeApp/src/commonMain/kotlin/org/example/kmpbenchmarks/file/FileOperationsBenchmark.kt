@@ -17,30 +17,31 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
     fun runWriteBenchmark(warmup: Int, n: Int, measureTime: Boolean) {
         for (i in 0 until warmup) {
             write(i, data, suffix = "write")
+            print("Warmup: Wrote file $i \n")
         }
 
         if (measureTime) {
-            for (i in 0 until n) {
+            for (i in warmup until n+warmup) {
                 val start = Clock.System.now().toEpochMilliseconds()
                 write(i, data, suffix = "write")
                 val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
                 performanceCalculator.sampleTime(duration)
-                println("Wrote file $i")
+                print("Measured time: Wrote file $i \n")
             }
             performanceCalculator.postTimes()
         } else {
-            for (i in 0 until n) {
+            for (i in warmup until n+warmup) {
                 performanceCalculator.start()
                 write(i, data, suffix = "write")
-                performanceCalculator.stopAndPost(i)
-                println("Wrote file $i")
+                performanceCalculator.stopAndPost(i-warmup)
+                print("Measured performance: Wrote file $i \n")
             }
         }
 
-        for (i in 0 until n) {
-            delete(i)
+        for (i in 0 until n+warmup) {
+            delete(i, suffix = "write")
+            println("Deleted file $i \n")
         }
-
         println("File write benchmark done")
     }
 
@@ -63,23 +64,20 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         }
 
         if (measureTime) {
-            for (i in 0 until n) {
-                val idx = indices[i + warmup]
+            for (i in warmup until n+warmup) {
                 val start = Clock.System.now().toEpochMilliseconds()
-                read(idx, suffix = "read")
+                read(indices[i], suffix = "read")
                 val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
                 performanceCalculator.sampleTime(duration)
             }
             performanceCalculator.postTimes()
         } else {
-            for (i in 0 until n) {
-                val idx = indices[i + warmup]
+            for (i in warmup until n+warmup) {
                 performanceCalculator.start()
-                read(idx, suffix = "read")
-                performanceCalculator.stopAndPost(i)
+                read(indices[i], suffix = "read")
+                performanceCalculator.stopAndPost(i-warmup)
             }
         }
-
         println("File read benchmark done")
     }
 

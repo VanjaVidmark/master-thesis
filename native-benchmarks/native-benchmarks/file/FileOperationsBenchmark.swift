@@ -27,7 +27,7 @@ class FileOperationsBenchmark {
     func read(index: Int, suffix: String? = nil) -> Data? {
         let url = fileURL(for: index, suffix: suffix)
         if !fileManager.fileExists(atPath: url.path) {
-            print("File not found: \(url.lastPathComponent)")
+            print("File not found: \(url.path)")
             return nil
         }
         return try? Data(contentsOf: url)
@@ -35,32 +35,37 @@ class FileOperationsBenchmark {
     
     func delete(index: Int, suffix: String? = nil) {
         let url = fileURL(for: index, suffix: suffix)
+        if !fileManager.fileExists(atPath: url.path) {
+            print("File not found: \(url.path)")
+        }
         try? fileManager.removeItem(at: url)
     }
 
     func runWriteBenchmark(warmup: Int, n: Int, measureTime: Bool) {
         for i in 0..<warmup {
             self.write(index: i, data: data, suffix: "write")
+            print("Warmup: Wrote file \(i)")
         }
         if measureTime {
-            for i in 0..<n {
+            for i in warmup..<n+warmup {
                 let start = Date().timeIntervalSince1970
                 self.write(index: i, data: data, suffix: "write")
                 let duration = Date().timeIntervalSince1970 - start
                 performanceCalculator.sampleTime(duration: duration)
-                print("Wrote file \(i)")
+                print("Measured time: Wrote file \(i)")
             }
             performanceCalculator.postTimes()
         } else {
-            for i in 0..<n {
+            for i in warmup..<n+warmup {
                 performanceCalculator.start()
                 self.write(index: i, data: data, suffix: "write")
-                performanceCalculator.stopAndPost(iteration: i)
-                print("Wrote file \(i)")
+                performanceCalculator.stopAndPost(iteration: i-warmup)
+                print("Measured performance: Wrote file \(i)")
             }
         }
-        for i in 0..<n {
-            self.delete(index: i)
+        for i in 0..<n+warmup {
+            self.delete(index: i, suffix: "write")
+            print("Deleted file \(i)")
         }
         print("File write benchmark done")
     }
@@ -87,24 +92,22 @@ class FileOperationsBenchmark {
             }
         }
         if measureTime {
-            for i in 0..<n {
-                let idx = indices[i + warmup]
+            for i in warmup..<n+warmup {
                 let start = Date().timeIntervalSince1970
                 autoreleasepool {
-                    _ = read(index: idx, suffix: "read")
+                    _ = read(index: indices[i], suffix: "read")
                 }
                 let duration = Date().timeIntervalSince1970 - start
                 performanceCalculator.sampleTime(duration: duration)
             }
             performanceCalculator.postTimes()
         } else {
-            for i in 0..<n {
-                let idx = indices[i + warmup]
+            for i in warmup..<n+warmup {
                 performanceCalculator.start()
                 autoreleasepool {
-                    _ = read(index: idx, suffix: "read")
+                    _ = read(index: indices[i], suffix: "read")
                 }
-                performanceCalculator.stopAndPost(iteration: i)
+                performanceCalculator.stopAndPost(iteration: i-warmup)
             }
         }
         print("File read benchmark done")

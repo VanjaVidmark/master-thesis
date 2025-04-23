@@ -6,7 +6,6 @@ import kotlinx.cinterop.autoreleasepool
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
 import platform.Foundation.*
-import platform.posix.memcpy
 
 private fun fileURL(index: Int, suffix: String? = null): NSURL {
     val tempDir = NSTemporaryDirectory()
@@ -33,7 +32,6 @@ actual fun read(index: Int, suffix: String?) {
         }
     }
 }
-
 
 @OptIn(ExperimentalForeignApi::class)
 actual fun delete(index: Int, suffix: String?) {
