@@ -25,9 +25,3 @@ class ScrollController: ObservableObject {
         print("Benchmark ended")
     }
 }
-
-class ScrollBenchmark {
-    func runBenchmark(n: Int) async throws {
-        await ScrollController.shared.startScrollBenchmark(seconds: n)
-    }
-}

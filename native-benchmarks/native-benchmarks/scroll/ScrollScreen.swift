@@ -25,7 +25,7 @@ struct ScrollScreen: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 600, height: 400)
                                 .clipped()
-                                .frame(maxWidth: .infinity, alignment: .center) // Center horizontally
+                                .frame(maxWidth: .infinity, alignment: .center)
 
                             Text("Item \(index)")
                                 .font(.system(size: 20))
@@ -35,7 +35,6 @@ struct ScrollScreen: View {
                         .padding(.vertical, 16)
                         .id(index)
                     }
-
                 }
             }
             .onReceive(controller.$isScrolling) { isScrolling in

@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7555FF7A242A565900829871"
-               BuildableName = "benchmark-app.app"
-               BlueprintName = "iosApp"
-               ReferencedContainer = "container:iosApp.xcodeproj">
+               BlueprintIdentifier = "D8E827BF2D70486800415E1E"
+               BuildableName = "native-benchmarks.app"
+               BlueprintName = "native-benchmarks"
+               ReferencedContainer = "container:native-benchmarks.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,6 +29,30 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D8E827CF2D70486900415E1E"
+               BuildableName = "native-benchmarksTests.xctest"
+               BlueprintName = "native-benchmarksTests"
+               ReferencedContainer = "container:native-benchmarks.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D8E827D92D70486900415E1E"
+               BuildableName = "native-benchmarksUITests.xctest"
+               BlueprintName = "native-benchmarksUITests"
+               ReferencedContainer = "container:native-benchmarks.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Release"
@@ -44,10 +68,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7555FF7A242A565900829871"
-            BuildableName = "benchmark-app.app"
-            BlueprintName = "iosApp"
-            ReferencedContainer = "container:iosApp.xcodeproj">
+            BlueprintIdentifier = "D8E827BF2D70486800415E1E"
+            BuildableName = "native-benchmarks.app"
+            BlueprintName = "native-benchmarks"
+            ReferencedContainer = "container:native-benchmarks.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -61,10 +85,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "7555FF7A242A565900829871"
-            BuildableName = "benchmark-app.app"
-            BlueprintName = "iosApp"
-            ReferencedContainer = "container:iosApp.xcodeproj">
+            BlueprintIdentifier = "D8E827BF2D70486800415E1E"
+            BuildableName = "native-benchmarks.app"
+            BlueprintName = "native-benchmarks"
+            ReferencedContainer = "container:native-benchmarks.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -18,10 +18,10 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
 
       self.filename = "Kmp\(benchmark).txt"
         
-      self.serverURL = URL(string: "http://192.168.0.91:5050/upload")
+      self.serverURL = URL(string: "http://10.0.4.44:5050/upload")
 
         switch benchmark {
-        case "Geolocation", "FileWrite", "FileRead", "Camera":
+        case "FileWrite", "FileRead", "Camera":
             runHardwareBenchmark(benchmark: benchmark)
 
         case "Scroll", "Visibility", "IdleState":
@@ -35,8 +35,8 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
     private func runHardwareBenchmark(benchmark: String) {
         let performanceCalculator = HardwarePerformanceCalculator(serverURL: serverURL!, filename: filename)
         
-        let warmup = 3
-        let iterations = 7
+        let warmup = 10
+        let iterations = 20
 
         Task {
             switch benchmark {

@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+class VisibilityBenchmark {
+    func runBenchmark(n: Int) async throws {
+        await VisibilityController.shared.startBenchmark(seconds: Int(n))
+    }
+}
