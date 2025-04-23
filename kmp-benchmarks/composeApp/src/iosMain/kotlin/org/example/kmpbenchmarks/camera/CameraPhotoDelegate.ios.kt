@@ -7,7 +7,7 @@ import platform.Foundation.NSData
 import platform.Foundation.NSError
 import platform.darwin.NSObject
 
-class CameraPhotoDelegate (
+class CameraPhotoDelegate(
     private val onSaved: () -> Unit
 ) : NSObject(), AVCapturePhotoCaptureDelegateProtocol {
 
