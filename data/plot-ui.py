@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 import sys
+import numpy as np
 
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
@@ -18,30 +19,38 @@ for impl in implementations:
     cpu_values = []
     fps_values = []
     dropped_values = []
+    ram_values = []
 
     with open(filename, "r") as file:
         lines = file.readlines()
 
-    in_first_iteration = False
+    in_iteration = False
     for line in lines:
         line = line.strip()
-        if line == "--- NEW ITERATION ---":
-            if not in_first_iteration:
-                in_first_iteration = True
+
+        if line.startswith("--- NEW ITERATION ---"):
+            if not in_iteration:
+                in_iteration = True
                 continue
             else:
-                break  # stop after first iteration
+                break  # Stop after the first iteration
 
-        if not in_first_iteration or not line or line.startswith("---") or line.startswith("CPU"):
+        if not in_iteration or not line or line.startswith("CPU") or line.startswith("---"):
             continue
 
         parts = [p.strip() for p in line.split("|")]
-        if len(parts) >= 5:
+        if len(parts) == 5:
             try:
-                cpu, fps, dropped, _, timestamp = map(float, parts)
+                cpu = float(parts[0])
+                fps = float(parts[1])
+                dropped = float(parts[2])
+                ram = float(parts[3])
+                timestamp = float(parts[4])
+
                 cpu_values.append(cpu)
                 fps_values.append(fps)
                 dropped_values.append(dropped)
+                ram_values.append(ram)
                 timestamps.append(timestamp)
             except ValueError:
                 continue
@@ -54,23 +63,23 @@ for impl in implementations:
         "timestamp": timestamps,
         "cpu": cpu_values,
         "fps": fps_values,
-        "dropped": dropped_values
+        "dropped": dropped_values,
+        "ram": ram_values
     }
 
-# Plot
-import numpy as np
-
-fig, axs = plt.subplots(2, 2, figsize=(12, 6), sharex=True)
+# Plotting
+fig, axs = plt.subplots(2, 2, figsize=(12, 8), sharex=True)
 
 metrics = [
     ("cpu", "CPU Usage (%)", axs[0][0]),
     ("fps", "FPS", axs[0][1]),
-    ("dropped", "Frame Drops", axs[1][0])
+    ("dropped", "Frame Drops", axs[1][0]),
+    ("ram", "RAM Usage (MB)", axs[1][1])
 ]
 
 for key, ylabel, ax in metrics:
     for impl in implementations:
-        if data[impl]["timestamp"]:  # Only plot if there's data
+        if data[impl]["timestamp"]:
             ax.plot(data[impl]["timestamp"], data[impl][key], label=impl.upper(), linewidth=1.5)
     ax.set_ylabel(ylabel)
     ax.legend()
