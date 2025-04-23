@@ -10,7 +10,7 @@ expect fun stopCameraSession()
 class CameraBenchmark(
     private val performanceCalculator: PerformanceCalculator
 ) {
-    suspend fun runBenchmark(warmup: Int, n: Int) {
+    suspend fun runBenchmark(warmup: Int, n: Int, measureTime: Boolean) {
         try {
             prepareCameraSession()
         } catch (e: Exception) {
@@ -18,24 +18,42 @@ class CameraBenchmark(
             return
         }
 
+        // Warmup round
         for (i in 0 until warmup) {
-            takeAndSavePhoto()
-            println("Saved warmup photo ${i + 1}/$warmup")
+            try {
+                takeAndSavePhoto()
+                println("Saved warmup photo ${i + 1}/$warmup")
+            } catch (e: Exception) {
+                println("Warmup photo $i failed: ${e.message}")
+            }
         }
 
-        for (i in 0 until n) {
-            // First pass — performance
-            performanceCalculator.start()
-            takeAndSavePhoto()
-            performanceCalculator.stopAndPost(i)
-            println("Saved photo ${i + 1}/$n, first pass")
-
-            // Second pass — timing
-            val start = Clock.System.now().toEpochMilliseconds()
-            takeAndSavePhoto()
-            val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
-            performanceCalculator.postTime(duration)
-            println("Saved photo ${i + 1}/$n, second pass")
+        if (measureTime) {
+            for (i in 0 until n) {
+                val start = Clock.System.now().toEpochMilliseconds()
+                try {
+                    takeAndSavePhoto()
+                } catch (e: Exception) {
+                    println("Photo $i failed (timing): ${e.message}")
+                    continue
+                }
+                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                performanceCalculator.sampleTime(duration)
+                println("Saved photo ${i + 1}/$n")
+            }
+            performanceCalculator.postTimes()
+        } else {
+            for (i in 0 until n) {
+                performanceCalculator.start()
+                try {
+                    takeAndSavePhoto()
+                } catch (e: Exception) {
+                    println("Photo $i failed (performance): ${e.message}")
+                    continue
+                }
+                performanceCalculator.stopAndPost(i)
+                println("Saved photo ${i + 1}/$n")
+            }
         }
 
         stopCameraSession()

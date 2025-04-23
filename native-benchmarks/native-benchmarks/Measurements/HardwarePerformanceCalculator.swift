@@ -41,8 +41,8 @@ internal class HardwarePerformanceCalculator {
     private var buffer = [String]()
     
     // Properties for handling Time samples
-    private var timeSamples = [(label: String, timestamp: TimeInterval)]()
-    private let timeSampleQueue = DispatchQueue(label: "timeSampleQueue", attributes: .concurrent)
+    private var timeDurations = [Double]()
+    private let timeDurationsQueue = DispatchQueue(label: "timeDurationsQueue", attributes: .concurrent)
 
 
     // MARK: Init Methods & Superclass Overriders
@@ -68,10 +68,20 @@ internal extension HardwarePerformanceCalculator {
         self.startTimestamp = nil
         self.stopAndSendMetrics(iteration: iteration)
     }
+    /// samples time
+    func sampleTime(duration: Double) {
+        timeDurationsQueue.async(flags: .barrier) {
+            self.timeDurations.append(duration)
+        }
+    }
 
-    /// Appends time to the measurements file
-    func postTime(duration: Double) {
-        postToServer(metrics: "\nExecution time: \(duration)\n", filename: filename, append: true)
+    /// Writes times to server
+    func postTimes() {
+        timeDurationsQueue.sync {
+            let metrics = timeDurations.map { String($0) }.joined(separator: "\n") + "\n"
+            postToServer(metrics: metrics, filename: filename, append: false)
+            timeDurations.removeAll()
+        }
     }
 }
 

@@ -14,53 +14,73 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         Random.nextBytes(this)
     }
 
-    fun runWriteBenchmark(warmup: Int, n: Int) {
-        // Warmup rounds
+    fun runWriteBenchmark(warmup: Int, n: Int, measureTime: Boolean) {
         for (i in 0 until warmup) {
-            write(i, data)
-            delete(i)
+            write(i, data, suffix = "write")
+        }
+
+        if (measureTime) {
+            for (i in 0 until n) {
+                val start = Clock.System.now().toEpochMilliseconds()
+                write(i, data, suffix = "write")
+                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                performanceCalculator.sampleTime(duration)
+                println("Wrote file $i")
+            }
+            performanceCalculator.postTimes()
+        } else {
+            for (i in 0 until n) {
+                performanceCalculator.start()
+                write(i, data, suffix = "write")
+                performanceCalculator.stopAndPost(i)
+                println("Wrote file $i")
+            }
         }
 
         for (i in 0 until n) {
-            // First pass - Measure CPU and Memory
-            performanceCalculator.start()
-            write(i, data, suffix = "pass1")
-            performanceCalculator.stopAndPost(i)
-            delete(i, suffix = "pass1")
-
-            // Second pass - Measure Execution Time
-            val start = Clock.System.now().toEpochMilliseconds()
-            write(i, data, suffix = "pass2")
-            val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
-            delete(i, suffix = "pass2")
-            performanceCalculator.postTime(duration)
-        }
-        println("File write done")
-    }
-
-    fun runReadBenchmark(warmup: Int, n: Int) {
-        // Warmup rounds
-        for (i in 0 until warmup) {
-            write(i, data)
             delete(i)
         }
 
-        for (i in 0 until n) {
-            // First pass - Measure CPU and Memory
-            write(i, data, suffix = "pass1")
-            performanceCalculator.start()
-            read(i, suffix = "pass1")
-            performanceCalculator.stopAndPost(i)
-            delete(i, suffix = "pass1")
-
-            // Second pass - Measure Execution Time
-            write(i, data, suffix = "pass2")
-            val start = Clock.System.now().toEpochMilliseconds()
-            read(i, suffix = "pass2")
-            val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
-            delete(i, suffix = "pass2")
-            performanceCalculator.postTime(duration)
-        }
-        println("File read done")
+        println("File write benchmark done")
     }
+
+    fun preWriteFiles(files: Int) {
+        for (i in 0 until files) {
+            write(i, data, suffix = "read")
+            println("Wrote file $i, read")
+        }
+        println("Files pre-written, restart app!")
+    }
+
+    fun runReadBenchmark(warmup: Int, n: Int, measureTime: Boolean) {
+        val totalFiles = warmup + n
+        val indices = (0 until totalFiles).shuffled()
+
+        // Warmup (not measured)
+        for (i in 0 until warmup) {
+            val idx = indices[i]
+            read(idx, suffix = "read")
+        }
+
+        if (measureTime) {
+            for (i in 0 until n) {
+                val idx = indices[i + warmup]
+                val start = Clock.System.now().toEpochMilliseconds()
+                read(idx, suffix = "read")
+                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                performanceCalculator.sampleTime(duration)
+            }
+            performanceCalculator.postTimes()
+        } else {
+            for (i in 0 until n) {
+                val idx = indices[i + warmup]
+                performanceCalculator.start()
+                read(idx, suffix = "read")
+                performanceCalculator.stopAndPost(i)
+            }
+        }
+
+        println("File read benchmark done")
+    }
+
 }

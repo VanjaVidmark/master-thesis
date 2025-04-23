@@ -76,23 +76,3 @@ axs[1].set_xlabel("Seconds since start")
 fig.suptitle(f"{benchmark} Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
-
-# 📊 Stats printing
-print("\n Resource Usage Summary:\n")
-for impl in implementations:
-    cpu_vals = data[impl]["cpu"]
-    mem_vals = data[impl]["memory"]
-    exec_vals = data[impl]["exec_times"]
-    if cpu_vals and mem_vals:
-        print(f"{impl.upper()}:")
-        print(f"  Avg CPU:     {statistics.mean(cpu_vals):.2f} %")
-        print(f"  CPU StdDev:  {statistics.stdev(cpu_vals):.2f} %")
-        print(f"  Avg Memory:  {statistics.mean(mem_vals):.2f} MB")
-        print(f"  Mem StdDev:  {statistics.stdev(mem_vals):.2f} MB")
-        if exec_vals:
-            print(f"  Avg Exec Time:  {statistics.mean(exec_vals):.4f} sec")
-            print(f"  Exec StdDev:    {statistics.stdev(exec_vals):.4f} sec\n")
-        else:
-            print("  No execution time data.\n")
-    else:
-        print(f"{impl.upper()}: No data found.\n")

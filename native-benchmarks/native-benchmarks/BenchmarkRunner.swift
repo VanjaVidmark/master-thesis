@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import AVFoundation
+import Photos
+import Network
 
 class BenchmarkRunner {
     private var filename = ""
@@ -20,11 +23,15 @@ class BenchmarkRunner {
         self.serverURL = URL(string: "http://10.0.4.44:5050/upload")
         
         switch benchmark {
-        case "FileWrite", "FileRead", "Camera":
+        case "FileWritePerformance", "FileWriteTime", "FileReadPerformance", "FileReadTime", "CameraPerformance", "CameraTime", "PreWrite":
             runHardwareBenchmark(benchmark: benchmark)
 
         case "Scroll", "Visibility", "Combined", "IdleState":
             runUiBenchmark(benchmark: benchmark)
+            
+        case "RequestPermissions":
+            requestPermissions()
+            
 
         default:
             print("Unsupported benchmark: \(benchmark)")
@@ -39,17 +46,33 @@ class BenchmarkRunner {
         
         Task {
             switch benchmark {
-            case "FileWrite":
+            case "FileWritePerformance":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations)
+                fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations, measureTime: false)
+                
+            case "FileWriteTime":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations, measureTime: true)
   
-            case "FileRead":
+            case "FileReadPerformance":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                fileBenchmark.runReadBenchmark(warmup: warmup, n: iterations)
+                fileBenchmark.runReadBenchmark(warmup: warmup, n: iterations, measureTime: false)
+                
+            case "FileReadTime":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.runReadBenchmark(warmup: warmup, n: iterations, measureTime: true)
     
-            case "Camera":
+            case "CameraPerformance":
                 let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
-                await cameraBenchmark.runBenchmark(warmup: warmup, n: iterations)
+                await cameraBenchmark.runBenchmark(warmup: warmup, n: iterations, measureTime: false)
+            
+            case "CameraTime":
+                let cameraBenchmark = CameraBenchmark(performanceCalculator: performanceCalculator)
+                await cameraBenchmark.runBenchmark(warmup: warmup, n: iterations, measureTime: true)
+                
+            case "PreWrite":
+                let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                fileBenchmark.preWriteFiles(files: iterations + warmup)
 
             default:
                 break
@@ -95,5 +118,38 @@ class BenchmarkRunner {
                 print("\(benchmark) benchmark failed: \(error)")
             }
         }
+    }
+    
+    // Function to request all necesary permissions afer having deleted the app
+    private func requestPermissions() {
+        // Request camera access
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+            print("Camera access: \(granted ? "granted" : "denied")")
+        }
+
+        // request photo library access
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
+            switch status {
+            case .authorized, .limited:
+                print("Granted photo library access")
+            case .denied, .restricted, .notDetermined:
+                print("Not granted photo library access")
+            @unknown default:
+                break
+            }
+        }
+
+        // local network access
+        var request = URLRequest(url: self.serverURL!)
+        request.httpMethod = "GET"
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("\(error)")
+            } else {
+                print("Local network access triggered")
+            }
+        }
+        task.resume()
     }
 }

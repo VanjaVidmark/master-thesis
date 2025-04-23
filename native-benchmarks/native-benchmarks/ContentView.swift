@@ -23,20 +23,43 @@ struct ContentView: View {
                     
                     // MARK: Hardware Tab
                     VStack(spacing: 20) {
-                        Button("Run Camera Benchmark") {
-                            benchmarkRunner.run(benchmark: "Camera")
-                        }
-                        .buttonStyle(.borderedProminent)
-
-                        Button("Run File Write Benchmark") {
-                            benchmarkRunner.run(benchmark: "FileWrite")
-                        }
-                        .buttonStyle(.borderedProminent)
-
+                        
+                        // MARK: Execution times
+                        Text("Measure execution times")
+                        
                         Button("Run File Read Benchmark") {
-                            benchmarkRunner.run(benchmark: "FileRead")
+                            benchmarkRunner.run(benchmark: "FileReadTime")
                         }
                         .buttonStyle(.borderedProminent)
+                        
+                        Button("Run File Write Benchmark") {
+                            benchmarkRunner.run(benchmark: "FileWriteTime")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Run Camera Benchmark") {
+                            benchmarkRunner.run(benchmark: "CameraTime")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        // MARK: Performance
+                        Text("Measure CPU and memory")
+                        
+                        Button("Run File Read Benchmark") {
+                            benchmarkRunner.run(benchmark: "FileReadPerformance")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Run File Write Benchmark") {
+                            benchmarkRunner.run(benchmark: "FileWritePerformance")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Run Camera Benchmark") {
+                            benchmarkRunner.run(benchmark: "CameraPerformance")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.white)
@@ -68,7 +91,17 @@ struct ContentView: View {
 
                     // Other Tab
                     VStack(spacing: 20) {
-                        Button("Sample idle state memory") {
+                        Button("Request all necessary permissions") {
+                            benchmarkRunner.run(benchmark: "RequestPermissions")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Write files for Read Benchmark") {
+                            benchmarkRunner.run(benchmark: "PreWrite")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Sample Idle State Memory") {
                             benchmarkRunner.run(benchmark: "IdleState")
                         }
                         .buttonStyle(.borderedProminent)

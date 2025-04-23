@@ -8,7 +8,7 @@ final class CameraBenchmark {
         self.performanceCalculator = performanceCalculator
     }
 
-    func runBenchmark(warmup: Int, n: Int) async {
+    func runBenchmark(warmup: Int, n: Int, measureTime: Bool) async {
         do {
             try await cameraService.prepare()
         } catch {
@@ -16,25 +16,27 @@ final class CameraBenchmark {
             return
         }
 
-        for i in 0...warmup {
+        for i in 0..<warmup {
             // warmup round
             try? await cameraService.takeAndSavePhoto()
             print("Saved warmup photo \(i + 1)/\(warmup)")
         }
-        
-        for i in 0...n {
-            // First pass - Measure CPU and Memory
-            performanceCalculator.start()
-            try? await cameraService.takeAndSavePhoto()
-            performanceCalculator.stopAndPost(iteration: i)
-            print("Saved photo \(i + 1)/\(n), first pass")
-            
-            // Second pass - Measure Execution time
-            var start = CFAbsoluteTimeGetCurrent()
-            try? await cameraService.takeAndSavePhoto()
-            let timeElapsed = CFAbsoluteTimeGetCurrent() - start
-            performanceCalculator.postTime(duration: timeElapsed)
-            print("Saved photo \(i + 1)/\(n), second pass")
+        if measureTime {
+            for i in 0..<n {
+                let start = CFAbsoluteTimeGetCurrent()
+                try? await cameraService.takeAndSavePhoto()
+                let timeElapsed = CFAbsoluteTimeGetCurrent() - start
+                performanceCalculator.sampleTime(duration: timeElapsed)
+                print("Saved photo \(i + 1)/\(n)")
+            }
+            performanceCalculator.postTimes()
+        } else {
+            for i in 0..<n {
+                performanceCalculator.start()
+                try? await cameraService.takeAndSavePhoto()
+                performanceCalculator.stopAndPost(iteration: i)
+                print("Saved photo \(i + 1)/\(n)")
+            }
         }
         cameraService.stop()
         print("Camera benchmark complete")

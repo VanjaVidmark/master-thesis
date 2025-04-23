@@ -9,43 +9,37 @@ metrics = ["cpu", "memory", "exec_time"]
 data = {impl: {m: [] for m in metrics} for impl in implementations}
 
 for impl in implementations:
-    filename = f"{impl}{benchmark}.txt"
-    if not os.path.isfile(filename):
-        raise FileNotFoundError(f"Could not find file: {filename}")
+    perf_filename = f"{impl}{benchmark}Performance.txt"
+    time_filename = f"{impl}{benchmark}Time.txt"
 
-    with open(filename, "r") as f:
-        lines = f.readlines()
+    # Read performance data (CPU + Memory)
+    if not os.path.isfile(perf_filename):
+        raise FileNotFoundError(f"Could not find file: {perf_filename}")
 
-    timestamps = []
-    cpu_values = []
-    memory_values = []
-    exec_times = []
-
-    for line in lines:
-        line = line.strip()
-
-        if line.startswith("Execution time:"):
+    with open(perf_filename, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("---") or line.startswith("CPU"):
+                continue
             try:
-                exec_time = float(line.replace("Execution time:", "").strip())
-                exec_times.append(exec_time)
+                cpu, memory, _ = map(float, line.split("|"))
+                data[impl]["cpu"].append(cpu)
+                data[impl]["memory"].append(memory)
             except ValueError:
                 continue
-            continue
 
-        if not line or line.startswith("---") or line.startswith("CPU"):
-            continue
+    # Read time data
+    if not os.path.isfile(time_filename):
+        raise FileNotFoundError(f"Could not find file: {time_filename}")
 
-        try:
-            cpu, memory, timestamp = map(float, line.split("|"))
-            cpu_values.append(cpu)
-            memory_values.append(memory)
-            timestamps.append(timestamp)
-        except ValueError:
-            continue
-
-    data[impl]["cpu"].extend(cpu_values)
-    data[impl]["memory"].extend(memory_values)
-    data[impl]["exec_time"].extend(exec_times)
+    with open(time_filename, "r") as f:
+        for line in f:
+            line = line.strip()
+            try:
+                exec_time = float(line)
+                data[impl]["exec_time"].append(exec_time)
+            except ValueError:
+                continue
 
 # Run t-tests and print results
 print(f"\nT-Test Results for Benchmark: {benchmark}")
@@ -67,7 +61,7 @@ for m in metrics:
 
     try:
         t_stat, p_value = ttest_ind(kmp_vals, native_vals, equal_var=False)
-    except Exception as e:
+    except Exception:
         t_stat, p_value = float("nan"), float("nan")
 
     significant = "YES" if p_value < 0.05 else "NO"
