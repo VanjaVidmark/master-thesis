@@ -106,6 +106,13 @@ fun App(benchmarkRunner: BenchmarkRunner) {
                                 currentScreen = "Visibility"
                             }
                         }) { Text("Run Visibility Benchmark") }
+
+                        Button(onClick = {
+                            scope.launch {
+                                benchmarkRunner.run("Animations")
+                                currentScreen = "Animations"
+                            }
+                        }) { Text("Run Multiple Animations Benchmark") }
                     }
 
                     "Other" -> Column(

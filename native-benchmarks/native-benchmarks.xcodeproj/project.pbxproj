@@ -25,6 +25,9 @@
 		D8FC9B7A2DB83E72006E23A7 /* VisibilityBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B792DB83E72006E23A7 /* VisibilityBenchmark.swift */; };
 		D8FC9B7C2DB83EAA006E23A7 /* ScrollBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B7B2DB83EAA006E23A7 /* ScrollBenchmark.swift */; };
 		D8FC9B7E2DB90185006E23A7 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B7D2DB90185006E23A7 /* CameraService.swift */; };
+		D8FC9B812DBB6B74006E23A7 /* AnimationsBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B802DBB6B74006E23A7 /* AnimationsBenchmark.swift */; };
+		D8FC9B832DBB6BBF006E23A7 /* AnimationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B822DBB6BBF006E23A7 /* AnimationsController.swift */; };
+		D8FC9B852DBB6C0D006E23A7 /* AnimationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B842DBB6C0D006E23A7 /* AnimationsScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +70,9 @@
 		D8FC9B792DB83E72006E23A7 /* VisibilityBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityBenchmark.swift; sourceTree = "<group>"; };
 		D8FC9B7B2DB83EAA006E23A7 /* ScrollBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollBenchmark.swift; sourceTree = "<group>"; };
 		D8FC9B7D2DB90185006E23A7 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		D8FC9B802DBB6B74006E23A7 /* AnimationsBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationsBenchmark.swift; sourceTree = "<group>"; };
+		D8FC9B822DBB6BBF006E23A7 /* AnimationsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationsController.swift; sourceTree = "<group>"; };
+		D8FC9B842DBB6C0D006E23A7 /* AnimationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationsScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +176,7 @@
 		D8E827C22D70486800415E1E /* native-benchmarks */ = {
 			isa = PBXGroup;
 			children = (
+				D8FC9B7F2DBB6B2A006E23A7 /* animations */,
 				D86CE2102DA11D090029ED5C /* combined */,
 				D86CE2092D9D5FCF0029ED5C /* Info.plist */,
 				D86CE2062D9D5CE00029ED5C /* camera */,
@@ -192,6 +199,16 @@
 				D8E827CA2D70486900415E1E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D8FC9B7F2DBB6B2A006E23A7 /* animations */ = {
+			isa = PBXGroup;
+			children = (
+				D8FC9B802DBB6B74006E23A7 /* AnimationsBenchmark.swift */,
+				D8FC9B822DBB6BBF006E23A7 /* AnimationsController.swift */,
+				D8FC9B842DBB6C0D006E23A7 /* AnimationsScreen.swift */,
+			);
+			path = animations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,6 +344,7 @@
 				D88635DE2D92F02E00C1D277 /* LinkedFramesList.swift in Sources */,
 				D86CE2122DA558480029ED5C /* UiPerformanceCalculator.swift in Sources */,
 				D8E827C62D70486800415E1E /* ContentView.swift in Sources */,
+				D8FC9B852DBB6C0D006E23A7 /* AnimationsScreen.swift in Sources */,
 				D8BCCD532D9429A400479E91 /* VisibilityController.swift in Sources */,
 				D82C9E0D2D9BDE0700959526 /* FileOperationsBenchmark.swift in Sources */,
 				D8BCCD552D942A2700479E91 /* VisibilityScreen.swift in Sources */,
@@ -334,6 +352,8 @@
 				D88635E12D92F59500C1D277 /* ScrollController.swift in Sources */,
 				D8FC9B7E2DB90185006E23A7 /* CameraService.swift in Sources */,
 				D8FC9B7A2DB83E72006E23A7 /* VisibilityBenchmark.swift in Sources */,
+				D8FC9B832DBB6BBF006E23A7 /* AnimationsController.swift in Sources */,
+				D8FC9B812DBB6B74006E23A7 /* AnimationsBenchmark.swift in Sources */,
 				D8FC9B752DB6AC94006E23A7 /* CombinedViewController.swift in Sources */,
 				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
 				D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */,

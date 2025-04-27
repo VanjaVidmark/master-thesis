@@ -17,6 +17,10 @@ struct ContentView: View {
                 VisibilityScreen {
                     currentScreen = "Tabs"
                 }
+            case "Animations":
+                AnimationsScreen {
+                    currentScreen = "Tabs"
+                }
 
             default:
                 TabView(selection: $selectedTab) {
@@ -79,6 +83,12 @@ struct ContentView: View {
                         Button("Run Visibility Benchmark") {
                             currentScreen = "Visibility"
                             benchmarkRunner.run(benchmark: "Visibility")
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        Button("Run Multiple Animations Benchmark") {
+                            currentScreen = "Animations"
+                            benchmarkRunner.run(benchmark: "Animations")
                         }
                         .buttonStyle(.borderedProminent)
                     }

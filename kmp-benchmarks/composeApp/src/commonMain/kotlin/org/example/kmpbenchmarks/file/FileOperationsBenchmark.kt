@@ -58,10 +58,11 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         val indices = (0 until totalFiles).shuffled()
 
         // Warmup (not measured)
+        /*
         for (i in 0 until warmup) {
             val idx = indices[i]
             read(idx, suffix = "read")
-        }
+        }*/
 
         if (measureTime) {
             for (i in warmup until n+warmup) {

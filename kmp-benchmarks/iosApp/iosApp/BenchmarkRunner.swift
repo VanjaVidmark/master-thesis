@@ -28,7 +28,7 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
         case "FileWritePerformance", "FileWriteTime", "FileReadPerformance", "FileReadTime", "CameraPerformance", "CameraTime", "PreWrite":
             runHardwareBenchmark(benchmark: benchmark)
 
-        case "Scroll", "Visibility", "IdleState":
+        case "Scroll", "Visibility", "Animations", "IdleState":
             runUiBenchmark(benchmark: benchmark)
             
         case "RequestPermissions":
@@ -98,6 +98,10 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
                 case "Visibility":
                     let visibilityBenchmark = VisibilityBenchmark()
                     try await visibilityBenchmark.runBenchmark(n: Int32(duration))
+                    
+                case "Animations":
+                    let animationsBenchmark = AnimationsBenchmark()
+                    try await animationsBenchmark.runBenchmark(n: Int32(duration))
                     
                 case "IdleState":
                     try await Task.sleep(nanoseconds: 5 * 1_000_000_000)

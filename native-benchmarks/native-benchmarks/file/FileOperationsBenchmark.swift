@@ -85,12 +85,13 @@ class FileOperationsBenchmark {
         indices.shuffle()
 
         // Warmup reads (not measured)
+        /*
         for i in 0..<warmup {
             let idx = indices[i]
             autoreleasepool {
                 _ = read(index: idx, suffix: "read")
             }
-        }
+        }*/
         if measureTime {
             for i in warmup..<n+warmup {
                 let start = Date().timeIntervalSince1970
