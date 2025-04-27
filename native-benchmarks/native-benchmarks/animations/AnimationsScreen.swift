@@ -1,19 +1,11 @@
-//
-//  AnimationsScreen.swift
-//  native-benchmarks
-//
-//  Created by Vanja Vidmark on 2025-04-25.
-//
-
 import SwiftUI
 
 struct AnimatedImage {
     let imageName: String
-    let speed: Double
-    let yOffset: CGFloat
-    let phaseOffset: Double
-    let direction: Double
-    let rotationSpeed: Double
+    let initialX: CGFloat
+    let initialY: CGFloat
+    let scaleOffset: Double
+    let visibilityOffset: Double
 }
 
 struct AnimationsScreen: View {
@@ -30,24 +22,29 @@ struct AnimationsScreen: View {
                 if controller.isAnimating {
                     TimelineView(.animation) { context in
                         let now = context.date.timeIntervalSince(startTime)
-                        let totalWidth = geo.size.width + 200.0
 
                         ForEach(0..<images.count, id: \.self) { i in
                             let img = images[i]
-                            let basePosition = now * img.speed * img.direction + img.phaseOffset
-                            let x = CGFloat(fmod(basePosition + totalWidth, totalWidth)) - 100.0
-                            let angle = Angle(degrees: now * img.rotationSpeed * img.direction)
+                            let timeSec = now
+
+                            let totalHeight = geo.size.height
+                            let totalWidth = geo.size.width
+
+                            let scale = 0.8 + 0.4 * sin((timeSec + img.scaleOffset / 1000.0) * 2 * Double.pi)
+                            let alpha = 0.5 + 0.5 * sin((timeSec + img.visibilityOffset / 1000.0) * 2 * Double.pi)
 
                             Image(img.imageName)
                                 .resizable()
-                                .frame(width: 60, height: 60)
-                                .rotationEffect(angle)
-                                .position(x: x, y: img.yOffset)
+                                .frame(width: 40, height: 40)
+                                .scaleEffect(scale)
+                                .position(x: img.initialX.truncatingRemainder(dividingBy: totalWidth),
+                                          y: img.initialY.truncatingRemainder(dividingBy: totalHeight))
+                                .opacity(alpha)
                         }
                     }
                     .onAppear {
                         startTime = Date()
-                        generateImages(screenHeight: geo.size.height)
+                        generateImages(screenWidth: geo.size.width, screenHeight: geo.size.height)
                     }
                 }
             }
@@ -59,15 +56,14 @@ struct AnimationsScreen: View {
         }
     }
 
-    func generateImages(screenHeight: CGFloat) {
-        images = (0..<100).map { _ in
+    func generateImages(screenWidth: CGFloat, screenHeight: CGFloat) {
+        images = (0..<200).map { _ in
             AnimatedImage(
                 imageName: imageNames.randomElement() ?? "star1",
-                speed: Double.random(in: 20...300),
-                yOffset: CGFloat.random(in: 80...(screenHeight - 80)),
-                phaseOffset: Double.random(in: 0...1000),
-                direction: Bool.random() ? 1.0 : -1.0,
-                rotationSpeed: Double.random(in: 30...180)
+                initialX: CGFloat.random(in: 0...screenWidth),
+                initialY: CGFloat.random(in: 0...1),
+                scaleOffset: Double.random(in: 0...1000),
+                visibilityOffset: Double.random(in: 0...1000)
             )
         }
     }

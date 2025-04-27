@@ -2,6 +2,7 @@ package org.example.kmpbenchmarks
 
 import ScrollScreen
 import VisibilityScreen
+import AnimationsScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +29,7 @@ fun App(benchmarkRunner: BenchmarkRunner) {
         when (currentScreen) {
             "Scroll" -> ScrollScreen(onDone = { currentScreen = "Tabs" })
             "Visibility" -> VisibilityScreen(onDone = { currentScreen = "Tabs" })
+            "Animations" -> AnimationsScreen(onDone = { currentScreen = "Tabs" })
 
             else -> Scaffold(
                 bottomBar = {
