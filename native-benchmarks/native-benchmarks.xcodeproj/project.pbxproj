@@ -21,7 +21,6 @@
 		D8E827C62D70486800415E1E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E827C52D70486800415E1E /* ContentView.swift */; };
 		D8E827C82D70486900415E1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8E827C72D70486900415E1E /* Assets.xcassets */; };
 		D8E827CB2D70486900415E1E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8E827CA2D70486900415E1E /* Preview Assets.xcassets */; };
-		D8FC9B752DB6AC94006E23A7 /* CombinedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B742DB6AC94006E23A7 /* CombinedViewController.swift */; };
 		D8FC9B7A2DB83E72006E23A7 /* VisibilityBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B792DB83E72006E23A7 /* VisibilityBenchmark.swift */; };
 		D8FC9B7C2DB83EAA006E23A7 /* ScrollBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B7B2DB83EAA006E23A7 /* ScrollBenchmark.swift */; };
 		D8FC9B7E2DB90185006E23A7 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8FC9B7D2DB90185006E23A7 /* CameraService.swift */; };
@@ -66,7 +65,6 @@
 		D8E827CA2D70486900415E1E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D8E827D02D70486900415E1E /* native-benchmarksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "native-benchmarksTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8E827DA2D70486900415E1E /* native-benchmarksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "native-benchmarksUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D8FC9B742DB6AC94006E23A7 /* CombinedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinedViewController.swift; sourceTree = "<group>"; };
 		D8FC9B792DB83E72006E23A7 /* VisibilityBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityBenchmark.swift; sourceTree = "<group>"; };
 		D8FC9B7B2DB83EAA006E23A7 /* ScrollBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollBenchmark.swift; sourceTree = "<group>"; };
 		D8FC9B7D2DB90185006E23A7 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
@@ -115,14 +113,6 @@
 				D8FC9B7D2DB90185006E23A7 /* CameraService.swift */,
 			);
 			path = camera;
-			sourceTree = "<group>";
-		};
-		D86CE2102DA11D090029ED5C /* combined */ = {
-			isa = PBXGroup;
-			children = (
-				D8FC9B742DB6AC94006E23A7 /* CombinedViewController.swift */,
-			);
-			path = combined;
 			sourceTree = "<group>";
 		};
 		D88635D62D92EF2600C1D277 /* Measurements */ = {
@@ -177,7 +167,6 @@
 			isa = PBXGroup;
 			children = (
 				D8FC9B7F2DBB6B2A006E23A7 /* animations */,
-				D86CE2102DA11D090029ED5C /* combined */,
 				D86CE2092D9D5FCF0029ED5C /* Info.plist */,
 				D86CE2062D9D5CE00029ED5C /* camera */,
 				D82C9E0B2D9BDDDC00959526 /* file */,
@@ -354,7 +343,6 @@
 				D8FC9B7A2DB83E72006E23A7 /* VisibilityBenchmark.swift in Sources */,
 				D8FC9B832DBB6BBF006E23A7 /* AnimationsController.swift in Sources */,
 				D8FC9B812DBB6B74006E23A7 /* AnimationsBenchmark.swift in Sources */,
-				D8FC9B752DB6AC94006E23A7 /* CombinedViewController.swift in Sources */,
 				D88635E32D92F5AC00C1D277 /* ScrollScreen.swift in Sources */,
 				D86CE20F2DA11B070029ED5C /* CameraBenchmark.swift in Sources */,
 				D88635DA2D92EF5800C1D277 /* HardwarePerformanceCalculator.swift in Sources */,

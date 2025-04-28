@@ -26,7 +26,7 @@ class BenchmarkRunner {
         case "FileWritePerformance", "FileWriteTime", "FileReadPerformance", "FileReadTime", "CameraPerformance", "CameraTime", "PreWrite":
             runHardwareBenchmark(benchmark: benchmark)
 
-        case "Scroll", "Visibility", "Animations", "Combined", "IdleState":
+        case "Scroll", "Visibility", "Animations", "IdleState":
             runUiBenchmark(benchmark: benchmark)
             
         case "RequestPermissions":
@@ -106,10 +106,6 @@ class BenchmarkRunner {
                     let animationsBenchmark = AnimationsBenchmark()
                     try await animationsBenchmark.runBenchmark(n: duration)
                     performanceCalculator.stopAndPost()
-                
-                case "Combined":
-                    let combined = CombinedBenchmark(performanceCalculator: performanceCalculator)
-                    try await combined.runBenchmark(warmup: 3, n: 7)
                     
                 case "IdleState":
                     performanceCalculator.start()

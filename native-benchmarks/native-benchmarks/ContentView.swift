@@ -12,7 +12,6 @@ struct ContentView: View {
                 ScrollScreen {
                     currentScreen = "Tabs"
                 }
-
             case "Visibility":
                 VisibilityScreen {
                     currentScreen = "Tabs"

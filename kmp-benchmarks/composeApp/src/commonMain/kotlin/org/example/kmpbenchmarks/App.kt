@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -33,7 +34,10 @@ fun App(benchmarkRunner: BenchmarkRunner) {
 
             else -> Scaffold(
                 bottomBar = {
-                    BottomNavigation {
+                    BottomNavigation(
+                        backgroundColor = Color.White,
+                        contentColor = Color.DarkGray
+                    ) {
                         BottomNavigationItem(
                             selected = selectedTab == "Hardware",
                             onClick = { selectedTab = "Hardware" },
