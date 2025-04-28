@@ -22,8 +22,8 @@ import kotlin.random.Random
 
 data class AnimatedStar(
     val image: DrawableResource,
-    val initialX: Float,
-    val initialY: Float,
+    val x: Float,
+    val y: Float,
     val scaleOffset: Float,
     val visibilityOffset: Float
 )
@@ -39,11 +39,11 @@ fun AnimationsScreen(onDone: () -> Unit) {
     )
 
     val stars = remember {
-        List(200) {
+        List(150) {
             AnimatedStar(
                 image = imageResources.random(),
-                initialX = Random.nextFloat() * 1080f,
-                initialY = Random.nextFloat() * 2340f,
+                x = Random.nextFloat() * 1080f,
+                y = Random.nextFloat() * 2340f,
                 scaleOffset = Random.nextFloat() * 1000f,
                 visibilityOffset = Random.nextFloat() * 1000f
             )
@@ -73,12 +73,6 @@ fun AnimationsScreen(onDone: () -> Unit) {
             stars.forEach { star ->
                 val timeSec = currentTime / 1000f
 
-                val totalWidth = containerSize.width.toFloat()
-                val totalHeight = containerSize.height.toFloat()
-
-                val x = star.initialX % totalWidth
-                val y = star.initialY % totalHeight
-
                 val scale = 0.8f + 0.4f * sin((timeSec + star.scaleOffset / 1000f) * 2 * PI).toFloat()
                 val alpha = 0.5f + 0.5f * sin((timeSec + star.visibilityOffset / 1000f) * 2 * PI).toFloat()
 
@@ -87,7 +81,7 @@ fun AnimationsScreen(onDone: () -> Unit) {
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .absoluteOffset { IntOffset(x.toInt(), y.toInt()) }
+                        .absoluteOffset { IntOffset(star.x.toInt(), star.y.toInt()) }
                         .alpha(alpha)
                         .graphicsLayer {
                             scaleX = scale

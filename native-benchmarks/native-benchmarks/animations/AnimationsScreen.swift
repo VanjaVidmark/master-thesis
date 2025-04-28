@@ -2,8 +2,8 @@ import SwiftUI
 
 struct AnimatedImage {
     let imageName: String
-    let initialX: CGFloat
-    let initialY: CGFloat
+    let x: CGFloat
+    let y: CGFloat
     let scaleOffset: Double
     let visibilityOffset: Double
 }
@@ -27,9 +27,6 @@ struct AnimationsScreen: View {
                             let img = images[i]
                             let timeSec = now
 
-                            let totalHeight = geo.size.height
-                            let totalWidth = geo.size.width
-
                             let scale = 0.8 + 0.4 * sin((timeSec + img.scaleOffset / 1000.0) * 2 * Double.pi)
                             let alpha = 0.5 + 0.5 * sin((timeSec + img.visibilityOffset / 1000.0) * 2 * Double.pi)
 
@@ -37,8 +34,8 @@ struct AnimationsScreen: View {
                                 .resizable()
                                 .frame(width: 40, height: 40)
                                 .scaleEffect(scale)
-                                .position(x: img.initialX.truncatingRemainder(dividingBy: totalWidth),
-                                          y: img.initialY.truncatingRemainder(dividingBy: totalHeight))
+                                .position(x: img.x,
+                                          y: img.y)
                                 .opacity(alpha)
                         }
                     }
@@ -48,6 +45,7 @@ struct AnimationsScreen: View {
                     }
                 }
             }
+            .frame(width: geo.size.width, height: geo.size.height)
             .onChange(of: controller.isAnimating) { running in
                 if !running {
                     onDone()
@@ -57,11 +55,11 @@ struct AnimationsScreen: View {
     }
 
     func generateImages(screenWidth: CGFloat, screenHeight: CGFloat) {
-        images = (0..<200).map { _ in
+        images = (0..<150).map { _ in
             AnimatedImage(
                 imageName: imageNames.randomElement() ?? "star1",
-                initialX: CGFloat.random(in: 0...screenWidth),
-                initialY: CGFloat.random(in: 0...1),
+                x: CGFloat.random(in: 0...screenWidth),
+                y: 0,
                 scaleOffset: Double.random(in: 0...1000),
                 visibilityOffset: Double.random(in: 0...1000)
             )
