@@ -43,17 +43,17 @@ class CameraBenchmark(
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for (i in 0 until n) {
-                performanceCalculator.start()
                 try {
                     takeAndSavePhoto()
                 } catch (e: Exception) {
                     println("Photo $i failed (performance): ${e.message}")
                     continue
                 }
-                performanceCalculator.stopAndPost(i)
                 println("Saved photo ${i + 1}/$n")
             }
+            performanceCalculator.stopAndPost()
         }
 
         stopCameraSession()

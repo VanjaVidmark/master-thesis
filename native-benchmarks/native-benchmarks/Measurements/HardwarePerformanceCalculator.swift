@@ -63,10 +63,10 @@ internal extension HardwarePerformanceCalculator {
         self.displayLink?.isPaused = false
     }
     /// Pauses performance monitoring.
-    func stopAndPost(iteration: Int) {
+    func stopAndPost() {
         self.displayLink?.isPaused = true
         self.startTimestamp = nil
-        self.stopAndSendMetrics(iteration: iteration)
+        self.stopAndSendMetrics()
     }
     /// samples time
     func sampleTime(duration: Double) {
@@ -78,8 +78,9 @@ internal extension HardwarePerformanceCalculator {
     /// Writes times to server
     func postTimes() {
         timeDurationsQueue.sync {
+            let header = "\n--- NEW BENCHMARK RUN ---\n"
             let metrics = timeDurations.map { String($0) }.joined(separator: "\n") + "\n"
-            postToServer(metrics: metrics, filename: filename, append: false)
+            postToServer(metrics: header + metrics, filename: filename)
             timeDurations.removeAll()
         }
     }
@@ -182,22 +183,22 @@ private extension HardwarePerformanceCalculator {
         }
     }
     
-    func stopAndSendMetrics(iteration: Int) {
+    func stopAndSendMetrics() {
         // Ensure all writes are done before posting
         queue.sync(flags: .barrier) {
-            let header = "\n--- ITERATION \(iteration) ---\n"
+            let header = "\n--- NEW BENCHMARK RUN ---\n"
             let allMetrics = buffer.joined(separator: "\n")
-            postToServer(metrics: header + allMetrics, filename: filename, append: iteration > 0)
+            postToServer(metrics: header + allMetrics, filename: filename)
             buffer.removeAll()
         }
     }
     
-    private func postToServer(metrics: String, filename: String, append: Bool) {
+    private func postToServer(metrics: String, filename: String) {
         var request = URLRequest(url: serverURL)
         request.httpMethod = "POST"
         request.setValue("text/plain", forHTTPHeaderField: "Content-Type")
         request.setValue(filename, forHTTPHeaderField: "Filename")
-        request.setValue(append ? "append" : "overwrite", forHTTPHeaderField: "Write-Mode")
+        request.setValue("append", forHTTPHeaderField: "Write-Mode")
         request.httpBody = metrics.data(using: .utf8)
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in

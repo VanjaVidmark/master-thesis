@@ -5,8 +5,9 @@ from scipy.stats import ttest_ind
 
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
-metrics = ["cpu", "fps", "dropped", "memory"]
-data = {impl: {m: [] for m in metrics} for impl in implementations}
+metrics = ["cpu", "fps", "memory"]  # Dropped is handled separately
+data = {impl: {m: [] for m in metrics + ["dropped"]} for impl in implementations}
+total_runs = 0
 
 for impl in implementations:
     filename = f"{impl}{benchmark}.txt"
@@ -18,20 +19,19 @@ for impl in implementations:
 
     in_iteration = False
     timestamps = []
-    buffer = {m: [] for m in metrics}
+    buffer = {m: [] for m in metrics + ["dropped"]}
     start_time = None
 
     for line in lines:
         line = line.strip()
-        if line == "--- NEW ITERATION ---":
-            # Save completed iteration
+        if line == "--- NEW BENCHMARK RUN ---":
+            total_runs += total_runs
             if timestamps:
-                for m in metrics:
+                for m in metrics + ["dropped"]:
                     data[impl][m].extend(buffer[m])
-            # Reset for next
             in_iteration = True
             timestamps = []
-            buffer = {m: [] for m in metrics}
+            buffer = {m: [] for m in metrics + ["dropped"]}
             start_time = None
             continue
 
@@ -47,7 +47,7 @@ for impl in implementations:
             start_time = timestamp
 
         if timestamp - start_time < 10:
-            continue  # skip warmup
+            continue 
 
         buffer["cpu"].append(cpu)
         buffer["fps"].append(fps)
@@ -55,12 +55,13 @@ for impl in implementations:
         buffer["memory"].append(memory)
         timestamps.append(timestamp)
 
-    # Save final iteration if needed
     if timestamps:
-        for m in metrics:
+        for m in metrics + ["dropped"]:
             data[impl][m].extend(buffer[m])
 
-# Run t-tests and print results
+
+#  T-TEST 
+
 print(f"\nT-Test Results for Benchmark: {benchmark}")
 print(f"{'Metric':<10} {'KMP Mean':>10} {'KMP Std':>10} {'Swift Mean':>12} {'Swift Std':>12} {'t-stat':>10} {'p-value':>10} {'Significant':>12}")
 print("-" * 85)
@@ -82,3 +83,19 @@ for m in metrics:
     significant = "YES" if p_value < 0.05 else "NO"
 
     print(f"{m:<10} {mean_k:10.2f} {std_k:10.2f} {mean_n:12.2f} {std_n:12.2f} {t_stat:10.2f} {p_value:10.20f} {significant:>12}")
+
+
+#  DROPPED FRAMES
+
+print("\nTotal dropped frames per benhcmark run")
+print(f"{'Implementation':<15} {'Dropped/sec':>15}")
+print("-" * 35)
+
+for impl in implementations:
+    dropped_vals = data[impl]["dropped"]
+    if dropped_vals:
+        total_dropped = np.sum(dropped_vals)
+        dropped_per_run = total_dropped / 2
+        print(f"{impl:<15} {dropped_per_run:15.2f}")
+    else:
+        print(f"{impl:<15} No data.")

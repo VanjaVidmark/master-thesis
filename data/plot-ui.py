@@ -28,7 +28,7 @@ for impl in implementations:
     for line in lines:
         line = line.strip()
 
-        if line.startswith("--- NEW ITERATION ---"):
+        if line.startswith("--- NEW BENCHMARK RUN ---"):
             if not in_iteration:
                 in_iteration = True
                 continue

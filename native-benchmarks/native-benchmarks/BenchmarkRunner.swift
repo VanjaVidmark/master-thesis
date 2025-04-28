@@ -48,7 +48,9 @@ class BenchmarkRunner {
             switch benchmark {
             case "FileWritePerformance":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
+                performanceCalculator.start()
                 fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations, measureTime: false)
+                performanceCalculator.stopAndPost()
                 
             case "FileWriteTime":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)

@@ -30,12 +30,12 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for (i in warmup until n+warmup) {
-                performanceCalculator.start()
                 write(i, data, suffix = "write")
-                performanceCalculator.stopAndPost(i-warmup)
                 print("Measured performance: Wrote file $i \n")
             }
+            performanceCalculator.stopAndPost()
         }
 
         for (i in 0 until n+warmup) {
@@ -58,11 +58,10 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         val indices = (0 until totalFiles).shuffled()
 
         // Warmup (not measured)
-        /*
         for (i in 0 until warmup) {
             val idx = indices[i]
             read(idx, suffix = "read")
-        }*/
+        }
 
         if (measureTime) {
             for (i in warmup until n+warmup) {
@@ -73,11 +72,11 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for (i in warmup until n+warmup) {
-                performanceCalculator.start()
                 read(indices[i], suffix = "read")
-                performanceCalculator.stopAndPost(i-warmup)
             }
+            performanceCalculator.stopAndPost()
         }
         println("File read benchmark done")
     }

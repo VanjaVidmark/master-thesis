@@ -31,12 +31,12 @@ final class CameraBenchmark {
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for i in 0..<n {
-                performanceCalculator.start()
                 try? await cameraService.takeAndSavePhoto()
-                performanceCalculator.stopAndPost(iteration: i)
                 print("Saved photo \(i + 1)/\(n)")
             }
+            performanceCalculator.stopAndPost()
         }
         cameraService.stop()
         print("Camera benchmark complete")

@@ -56,12 +56,12 @@ class FileOperationsBenchmark {
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for i in warmup..<n+warmup {
-                performanceCalculator.start()
                 self.write(index: i, data: data, suffix: "write")
-                performanceCalculator.stopAndPost(iteration: i-warmup)
                 print("Measured performance: Wrote file \(i)")
             }
+            performanceCalculator.stopAndPost()
         }
         for i in 0..<n+warmup {
             self.delete(index: i, suffix: "write")
@@ -85,13 +85,12 @@ class FileOperationsBenchmark {
         indices.shuffle()
 
         // Warmup reads (not measured)
-        /*
         for i in 0..<warmup {
             let idx = indices[i]
             autoreleasepool {
                 _ = read(index: idx, suffix: "read")
             }
-        }*/
+        }
         if measureTime {
             for i in warmup..<n+warmup {
                 let start = Date().timeIntervalSince1970
@@ -103,13 +102,13 @@ class FileOperationsBenchmark {
             }
             performanceCalculator.postTimes()
         } else {
+            performanceCalculator.start()
             for i in warmup..<n+warmup {
-                performanceCalculator.start()
                 autoreleasepool {
                     _ = read(index: indices[i], suffix: "read")
                 }
-                performanceCalculator.stopAndPost(iteration: i-warmup)
             }
+            performanceCalculator.stopAndPost()
         }
         print("File read benchmark done")
     }

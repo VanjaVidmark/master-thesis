@@ -61,7 +61,7 @@ internal extension UiPerformanceCalculator {
     }
 
     /// Pauses performance monitoring.
-    func stopAndPost(iteration: Int32 = 0) {
+    func stopAndPost() {
         self.displayLink?.isPaused = true
         self.startTimestamp = nil
         self.stopAndSendMetrics()
@@ -189,7 +189,7 @@ private extension UiPerformanceCalculator {
     func stopAndSendMetrics() {
         // Ensure all writes are done before posting
         queue.sync(flags: .barrier) {
-            let header = "\n--- NEW ITERATION ---\n"
+            let header = "\n--- NEW BENCHMARK RUN ---\n"
             let allMetrics = buffer.joined(separator: "\n")
             postToServer(metrics: header + allMetrics, filename: filename)
         }

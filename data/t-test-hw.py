@@ -12,7 +12,7 @@ for impl in implementations:
     perf_filename = f"{impl}{benchmark}Performance.txt"
     time_filename = f"{impl}{benchmark}Time.txt"
 
-    # Read performance data (CPU + Memory)
+    # Read performance data
     if not os.path.isfile(perf_filename):
         raise FileNotFoundError(f"Could not find file: {perf_filename}")
 
@@ -41,7 +41,7 @@ for impl in implementations:
             except ValueError:
                 continue
 
-# Run t-tests and print results
+# t-tests 
 print(f"\nT-Test Results for Benchmark: {benchmark}")
 print(f"{'Metric':<10} {'KMP Mean':>10} {'KMP Std':>10} {'Swift Mean':>12} {'Swift Std':>12} {'t-stat':>10} {'p-value':>10} {'Significant':>12}")
 print("-" * 85)
