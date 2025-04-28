@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -15,8 +16,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.example.kmpbenchmarks.scroll.ScrollController
 import org.jetbrains.compose.resources.painterResource
-import kmp_benchmarks.composeapp.generated.resources.Res
-import kmp_benchmarks.composeapp.generated.resources.img1mb
+import kmp_benchmarks.composeapp.generated.resources.*
+
+import kotlin.random.Random
 
 @Composable
 fun ScrollScreen(onDone: () -> Unit) {
@@ -26,7 +28,19 @@ fun ScrollScreen(onDone: () -> Unit) {
 
     var scrollJob by remember { mutableStateOf<Job?>(null) }
 
-    // Start scrolling when triggered
+    val images = listOf(
+        Res.drawable.scroll1,
+        Res.drawable.scroll2,
+        Res.drawable.scroll3,
+        Res.drawable.scroll4,
+        Res.drawable.scroll5,
+        Res.drawable.scroll6,
+        Res.drawable.scroll7,
+        Res.drawable.scroll8,
+        Res.drawable.scroll9,
+        Res.drawable.scroll10
+    )
+
     LaunchedEffect(isScrolling) {
         if (isScrolling) {
             scrollJob = scope.launch {
@@ -51,12 +65,14 @@ fun ScrollScreen(onDone: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(100) { index ->
+            val randomImage = remember { images.random() }
+            
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(vertical = 16.dp)
             ) {
                 Image(
-                    painter = painterResource(Res.drawable.img1mb),
+                    painter = painterResource(randomImage),
                     contentDescription = "Item image",
                     modifier = Modifier
                         .size(width = 600.dp, height = 400.dp),

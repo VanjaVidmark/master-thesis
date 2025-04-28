@@ -1,10 +1,3 @@
-//
-//  ScrollScreen.swift
-//  native-benchmarks
-//
-//  Created by Vanja Vidmark on 2025-03-25.
-//
-
 import SwiftUI
 
 struct ScrollScreen: View {
@@ -14,26 +7,15 @@ struct ScrollScreen: View {
     
     let onDone: () -> Void
 
+    let imageNames = (1...10).map { "scroll\($0)" }
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(alignment: .center) {
                     ForEach(0..<100) { index in
-                        VStack(spacing: 8) {
-                            Image("img1mb")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 600, height: 400)
-                                .clipped()
-                                .frame(maxWidth: .infinity, alignment: .center)
-
-                            Text("Item \(index)")
-                                .font(.system(size: 20))
-                                .padding(.bottom, 24)
-                                .multilineTextAlignment(.center)
-                        }
-                        .padding(.vertical, 16)
-                        .id(index)
+                        ScrollItemView(index: index, imageNames: imageNames)
+                            .id(index)
                     }
                 }
             }
@@ -67,3 +49,31 @@ struct ScrollScreen: View {
     }
 }
 
+struct ScrollItemView: View {
+    let index: Int
+    let imageNames: [String]
+
+    @State private var randomImageName: String = ""
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(randomImageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 600, height: 400)
+                .clipped()
+                .frame(maxWidth: .infinity, alignment: .center)
+
+            Text("Item \(index)")
+                .font(.system(size: 20))
+                .padding(.bottom, 24)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.vertical, 16)
+        .onAppear {
+            if randomImageName.isEmpty {
+                randomImageName = imageNames.randomElement() ?? "scroll1"
+            }
+        }
+    }
+}
