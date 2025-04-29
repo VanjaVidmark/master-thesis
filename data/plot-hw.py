@@ -6,6 +6,7 @@ import numpy as np
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 
+# Each impl -> list of runs -> each run has timestamp, cpu, memory, exec_times
 data = {}
 
 for impl in implementations:
@@ -17,37 +18,49 @@ for impl in implementations:
     if not os.path.isfile(time_filename):
         raise FileNotFoundError(f"Could not find time file: {time_filename}")
 
-    print(f"Using {impl}:")
-    print(f"  Performance: {perf_filename}")
-    print(f"  Time: {time_filename}")
+    print(f"Using {impl}: {perf_filename} and {time_filename}")
 
-    timestamps = []
-    cpu_values = []
-    memory_values = []
-    exec_times = []
+    data[impl] = []
 
-    # Read performance data
     with open(perf_filename, "r") as file:
         lines = file.readlines()
-        for line in lines:
-            line = line.strip()
-            if not line or line.startswith("---") or line.startswith("CPU"):
-                continue
-            try:
-                cpu, memory, timestamp = map(float, line.split("|"))
-                cpu_values.append(cpu)
-                memory_values.append(memory)
-                timestamps.append(timestamp)
-            except ValueError:
-                print(f"Skipped line: {line}")
-                continue
 
-    # Normalize timestamps to start from 0
-    if timestamps:
-        base_time = timestamps[0]
-        timestamps = [t - base_time for t in timestamps]
+    current_run_data = None
+    current_run = 0
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("--- NEW BENCHMARK RUN ---"):
+            current_run += 1
+            if current_run > 3:
+                break
+            current_run_data = {
+                "timestamp": [],
+                "cpu": [],
+                "memory": []
+            }
+            data[impl].append(current_run_data)
+            continue
+
+        if not current_run_data or not line or line.startswith("CPU") or line.startswith("---"):
+            continue
+
+        try:
+            cpu, memory, timestamp = map(float, line.split("|"))
+            current_run_data["cpu"].append(cpu)
+            current_run_data["memory"].append(memory)
+            current_run_data["timestamp"].append(timestamp)
+        except ValueError:
+            continue
+
+    # Normalize timestamps for each run
+    for run_data in data[impl]:
+        if run_data["timestamp"]:
+            base_time = run_data["timestamp"][0]
+            run_data["timestamp"] = [t - base_time for t in run_data["timestamp"]]
 
     # Read execution times
+    exec_times = []
     with open(time_filename, "r") as file:
         for line in file:
             line = line.strip()
@@ -56,35 +69,42 @@ for impl in implementations:
             except ValueError:
                 continue
 
-    data[impl] = {
-        "timestamp": timestamps,
-        "cpu": cpu_values,
-        "memory": memory_values,
-        "exec_times": exec_times
-    }
+    # Slice exec_times per run (assuming roughly equal splits)
+    split_exec_times = np.array_split(exec_times, min(3, len(exec_times)))
+    for i, times in enumerate(split_exec_times):
+        if i < len(data[impl]):
+            data[impl][i]["exec_times"] = times.tolist()
 
-fig, axs = plt.subplots(3, 1, figsize=(12, 9), sharex=False)
+# Plotting all small plots together
+fig, axs = plt.subplots(3, 3, figsize=(18, 12), sharex=False)
+axs = axs.flatten()
 
-metrics = [
-    ("cpu", "CPU Usage (%)", axs[0]),
-    ("memory", "Memory Usage (MB)", axs[1]),
-]
+metric_labels = {"cpu": "CPU Usage (%)", "memory": "Memory Usage (MB)", "exec_times": "Execution Time (s)"}
 
-for key, ylabel, ax in metrics:
-    for impl in implementations:
-        ax.plot(data[impl]["timestamp"], data[impl][key], label=impl.upper(), linewidth=1.5)
-    ax.set_ylabel(ylabel)
-    ax.legend()
-    ax.grid(True)
+plot_idx = 0
 
-for impl in implementations:
-    axs[2].plot(range(len(data[impl]["exec_times"])), data[impl]["exec_times"], marker='o', label=impl.upper())
+for run_idx in range(3):
+    for metric in ["cpu", "memory", "exec_times"]:
+        if plot_idx >= len(axs):
+            break
+        ax = axs[plot_idx]
+        for impl in implementations:
+            if run_idx < len(data[impl]):
+                run_data = data[impl][run_idx]
+                if metric == "exec_times":
+                    if "exec_times" in run_data and run_data["exec_times"]:
+                        ax.plot(range(len(run_data["exec_times"])), run_data["exec_times"], marker='o', label=impl.upper(), linewidth=1.0)
+                else:
+                    if run_data["timestamp"]:
+                        ax.plot(run_data["timestamp"], run_data[metric], label=impl.upper(), linewidth=1.0)
+        ax.set_title(f"Run {run_idx + 1} - {metric_labels[metric]}", fontsize=10)
+        ax.set_xlabel("Time (s)" if metric != "exec_times" else "Run Index", fontsize=8)
+        ax.set_ylabel(metric_labels[metric], fontsize=8)
+        ax.legend(fontsize=6)
+        ax.grid(True)
+        ax.tick_params(axis='both', which='major', labelsize=6)
+        plot_idx += 1
 
-axs[2].set_ylabel("Execution Time (s)")
-axs[2].set_xlabel("Run Index")
-axs[2].legend()
-axs[2].grid(True)
-
-fig.suptitle(f"{benchmark} Benchmark", fontsize=14)
+fig.suptitle(f"{benchmark} Hardware Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()

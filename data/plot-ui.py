@@ -6,6 +6,7 @@ import numpy as np
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 
+# Each impl -> list of runs -> each run has timestamp, cpu, fps, dropped, ram
 data = {}
 
 for impl in implementations:
@@ -15,27 +16,32 @@ for impl in implementations:
 
     print(f"Using {impl}: {filename}")
 
-    timestamps = []
-    cpu_values = []
-    fps_values = []
-    dropped_values = []
-    ram_values = []
+    data[impl] = []
 
     with open(filename, "r") as file:
         lines = file.readlines()
 
-    in_iteration = False
+    current_run_data = None
+    current_run = 0
+
     for line in lines:
         line = line.strip()
 
         if line.startswith("--- NEW BENCHMARK RUN ---"):
-            if not in_iteration:
-                in_iteration = True
-                continue
-            else:
-                break  # Stop after the first iteration
+            current_run += 1
+            if current_run > 3:
+                break
+            current_run_data = {
+                "timestamp": [],
+                "cpu": [],
+                "fps": [],
+                "dropped": [],
+                "ram": []
+            }
+            data[impl].append(current_run_data)
+            continue
 
-        if not in_iteration or not line or line.startswith("CPU") or line.startswith("---"):
+        if not current_run_data or not line or line.startswith("CPU") or line.startswith("---"):
             continue
 
         parts = [p.strip() for p in line.split("|")]
@@ -47,47 +53,46 @@ for impl in implementations:
                 ram = float(parts[3])
                 timestamp = float(parts[4])
 
-                cpu_values.append(cpu)
-                fps_values.append(fps)
-                dropped_values.append(dropped)
-                ram_values.append(ram)
-                timestamps.append(timestamp)
+                current_run_data["cpu"].append(cpu)
+                current_run_data["fps"].append(fps)
+                current_run_data["dropped"].append(dropped)
+                current_run_data["ram"].append(ram)
+                current_run_data["timestamp"].append(timestamp)
             except ValueError:
                 continue
 
-    if timestamps:
-        base_time = timestamps[0]
-        timestamps = [t - base_time for t in timestamps]
+# Now plot all runs together
 
-    data[impl] = {
-        "timestamp": timestamps,
-        "cpu": cpu_values,
-        "fps": fps_values,
-        "dropped": dropped_values,
-        "ram": ram_values
-    }
+fig, axs = plt.subplots(3, 4, figsize=(16, 12), sharex=False)
+axs = axs.flatten()
 
-# Plotting
-fig, axs = plt.subplots(2, 2, figsize=(12, 8), sharex=True)
+metrics = ["cpu", "fps", "dropped", "ram"]
+metric_labels = {"cpu": "CPU Usage (%)", "fps": "FPS", "dropped": "Frame Drops", "ram": "RAM Usage (MB)"}
 
-metrics = [
-    ("cpu", "CPU Usage (%)", axs[0][0]),
-    ("fps", "FPS", axs[0][1]),
-    ("dropped", "Frame Drops", axs[1][0]),
-    ("ram", "RAM Usage (MB)", axs[1][1])
-]
+plot_idx = 0
 
-for key, ylabel, ax in metrics:
-    for impl in implementations:
-        if data[impl]["timestamp"]:
-            ax.plot(data[impl]["timestamp"], data[impl][key], label=impl.upper(), linewidth=1.5)
-    ax.set_ylabel(ylabel)
-    ax.legend()
-    ax.grid(True)
+for run_idx in range(3):
+    for metric in metrics:
+        if plot_idx >= len(axs):
+            break
+        ax = axs[plot_idx]
+        for impl in implementations:
+            if run_idx < len(data[impl]):
+                run_data = data[impl][run_idx]
+                if run_data["timestamp"]:
+                    base_time = run_data["timestamp"][0]
+                    timestamps = [t - base_time for t in run_data["timestamp"]]
+                    ax.plot(timestamps, run_data[metric], label=impl.upper(), linewidth=1.0)
+        ax.set_title(f"{benchmark} Run {run_idx + 1} - {metric_labels[metric]}", fontsize=8)
+        ax.legend(fontsize=6)
+        ax.grid(True)
+        plot_idx += 1
 
-for ax in axs[1]:
-    ax.set_xlabel("Seconds since start")
+for ax in axs:
+    ax.set_xlabel("Time (s)", fontsize=7)
+    ax.set_ylabel("Value", fontsize=7)
+    ax.tick_params(axis='both', which='major', labelsize=6)
 
-fig.suptitle(f"{benchmark} Benchmark (First Iteration)", fontsize=14)
+fig.suptitle(f"{benchmark} Benchmark Results", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
