@@ -3,6 +3,7 @@ package org.example.kmpbenchmarks.file
 import org.example.kmpbenchmarks.PerformanceCalculator
 import kotlin.random.Random
 import kotlinx.datetime.Clock
+import org.example.kmpbenchmarks.getTime
 
 expect fun write(index: Int, data: ByteArray, suffix: String? = null)
 expect fun delete(index: Int, suffix: String? = null)
@@ -22,9 +23,9 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
 
         if (measureTime) {
             for (i in warmup until n+warmup) {
-                val start = Clock.System.now().toEpochMilliseconds()
+                val start = getTime()
                 write(i, data, suffix = "write")
-                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                val duration = getTime() - start
                 performanceCalculator.sampleTime(duration)
                 print("Measured time: Wrote file $i \n")
             }
@@ -65,9 +66,9 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
 
         if (measureTime) {
             for (i in warmup until n+warmup) {
-                val start = Clock.System.now().toEpochMilliseconds()
+                val start = getTime()
                 read(indices[i], suffix = "read")
-                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                val duration = getTime() - start
                 performanceCalculator.sampleTime(duration)
             }
             performanceCalculator.postTimes()

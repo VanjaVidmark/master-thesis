@@ -2,6 +2,7 @@ package org.example.kmpbenchmarks.camera
 
 import kotlinx.datetime.Clock
 import org.example.kmpbenchmarks.PerformanceCalculator
+import org.example.kmpbenchmarks.getTime
 
 expect suspend fun prepareCameraSession()
 expect suspend fun takeAndSavePhoto()
@@ -30,14 +31,14 @@ class CameraBenchmark(
 
         if (measureTime) {
             for (i in 0 until n) {
-                val start = Clock.System.now().toEpochMilliseconds()
+                val start = getTime()
                 try {
                     takeAndSavePhoto()
                 } catch (e: Exception) {
                     println("Photo $i failed (timing): ${e.message}")
                     continue
                 }
-                val duration = (Clock.System.now().toEpochMilliseconds() - start) / 1000.0
+                val duration = getTime() - start
                 performanceCalculator.sampleTime(duration)
                 println("Saved photo ${i + 1}/$n")
             }

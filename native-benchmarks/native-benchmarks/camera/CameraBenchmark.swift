@@ -23,9 +23,9 @@ final class CameraBenchmark {
         }
         if measureTime {
             for i in 0..<n {
-                let start = CFAbsoluteTimeGetCurrent()
+                let start = ProcessInfo.processInfo.systemUptime
                 try? await cameraService.takeAndSavePhoto()
-                let timeElapsed = CFAbsoluteTimeGetCurrent() - start
+                let timeElapsed = ProcessInfo.processInfo.systemUptime - start
                 performanceCalculator.sampleTime(duration: timeElapsed)
                 print("Saved photo \(i + 1)/\(n)")
             }

@@ -48,9 +48,9 @@ class FileOperationsBenchmark {
         }
         if measureTime {
             for i in warmup..<n+warmup {
-                let start = Date().timeIntervalSince1970
+                let start = ProcessInfo.processInfo.systemUptime
                 self.write(index: i, data: data, suffix: "write")
-                let duration = Date().timeIntervalSince1970 - start
+                let duration = ProcessInfo.processInfo.systemUptime - start
                 performanceCalculator.sampleTime(duration: duration)
                 print("Measured time: Wrote file \(i)")
             }
@@ -93,11 +93,11 @@ class FileOperationsBenchmark {
         }
         if measureTime {
             for i in warmup..<n+warmup {
-                let start = Date().timeIntervalSince1970
+                let start = ProcessInfo.processInfo.systemUptime
                 autoreleasepool {
                     _ = read(index: indices[i], suffix: "read")
                 }
-                let duration = Date().timeIntervalSince1970 - start
+                let duration = ProcessInfo.processInfo.systemUptime - start
                 performanceCalculator.sampleTime(duration: duration)
             }
             performanceCalculator.postTimes()
