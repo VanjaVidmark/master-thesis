@@ -6,19 +6,28 @@ from scipy.stats import ttest_ind
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 metrics = ["cpu", "memory", "exec_time"]
-data = {impl: {m: [] for m in metrics} for impl in implementations}
+
+# initialize nested dictionary for all data
+data = {}
+for impl in implementations:
+    data[impl] = {}
+    for m in metrics:
+        data[impl][m] = []
+
 
 for impl in implementations:
     perf_filename = f"{impl}{benchmark}Performance.txt"
     time_filename = f"{impl}{benchmark}Time.txt"
 
-    # Read performance data
+    # Handle CPU and memory data
+
     if not os.path.isfile(perf_filename):
         raise FileNotFoundError(f"Could not find file: {perf_filename}")
 
     with open(perf_filename, "r") as f:
         for line in f:
             line = line.strip()
+            # Skip lines not containing data
             if not line or line.startswith("---") or line.startswith("CPU"):
                 continue
             try:
@@ -28,7 +37,8 @@ for impl in implementations:
             except ValueError:
                 continue
 
-    # Read time data
+    # Handle time data
+
     if not os.path.isfile(time_filename):
         raise FileNotFoundError(f"Could not find file: {time_filename}")
 
@@ -41,23 +51,20 @@ for impl in implementations:
             except ValueError:
                 continue
 
-# t-tests 
+# T-TESTS
+
 print(f"\nT-Test Results for Benchmark: {benchmark}")
-print(f"{'Metric':<10} {'KMP Mean':>10} {'KMP Std':>10} {'Swift Mean':>12} {'Swift Std':>12} {'t-stat':>10} {'p-value':>10} {'Significant':>12}")
-print("-" * 85)
+print(f"{'Metric':<10} {'KMP Mean':>15} {'KMP Std':>15} {'Swift Mean':>15} {'Swift Std':>15} {'t-stat':>15} {'p-value':>15} {'Significant':>15}")
+print("-" * 120)
 
 for m in metrics:
     kmp_vals = data["Kmp"][m]
     native_vals = data["Native"][m]
 
-    if len(kmp_vals) < 2 or len(native_vals) < 2:
-        print(f"{m:<10} Not enough data.")
-        continue
-
-    mean_k = np.mean(kmp_vals)
-    std_k = np.std(kmp_vals, ddof=1)
-    mean_n = np.mean(native_vals)
-    std_n = np.std(native_vals, ddof=1)
+    mean_kmp = np.mean(kmp_vals)
+    std_kmp = np.std(kmp_vals, ddof=1)
+    mean_native = np.mean(native_vals)
+    std_native = np.std(native_vals, ddof=1)
 
     try:
         t_stat, p_value = ttest_ind(kmp_vals, native_vals, equal_var=False)
@@ -66,4 +73,4 @@ for m in metrics:
 
     significant = "YES" if p_value < 0.05 else "NO"
 
-    print(f"{m:<10} {mean_k:10.2f} {std_k:10.2f} {mean_n:12.2f} {std_n:12.2f} {t_stat:10.2f} {p_value:10.20f} {significant:>12}")
+    print(f"{m:<10} {mean_kmp:15.5f} {std_kmp:15.5f} {mean_native:15.5f} {std_native:15.5f} {t_stat:15.5f} {p_value:15.5f} {significant:>12}")
