@@ -39,7 +39,7 @@ fun AnimationsScreen(onDone: () -> Unit) {
     )
 
     val stars = remember {
-        List(150) {
+        List(250) {
             AnimatedStar(
                 image = imageResources.random(),
                 x = Random.nextFloat() * 1080f,

@@ -55,7 +55,7 @@ struct AnimationsScreen: View {
     }
 
     func generateImages(screenWidth: CGFloat, screenHeight: CGFloat) {
-        images = (0..<150).map { _ in
+        images = (0..<250).map { _ in
             AnimatedImage(
                 imageName: imageNames.randomElement() ?? "star1",
                 x: CGFloat.random(in: 0...screenWidth),
