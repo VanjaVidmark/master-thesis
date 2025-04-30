@@ -111,7 +111,7 @@ class BenchmarkRunner {
                     
                 case "IdleState":
                     performanceCalculator.start()
-                    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+                    try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
                     performanceCalculator.stopAndPost()
 
                 default:

@@ -63,7 +63,7 @@ for impl in implementations:
 
 # Now plot all runs together
 
-fig, axs = plt.subplots(3, 4, figsize=(16, 12), sharex=False)
+fig, axs = plt.subplots(3, 4, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
 
 metrics = ["cpu", "fps", "dropped", "ram"]

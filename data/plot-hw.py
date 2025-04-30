@@ -85,7 +85,7 @@ for impl in implementations:
             data[impl][i]["exec_times"] = times.tolist()
 
 # Plotting all small plots together
-fig, axs = plt.subplots(3, 3, figsize=(18, 12), sharex=False)
+fig, axs = plt.subplots(3, 3, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
 
 metric_labels = {"cpu": "CPU Usage (%)", "memory": "Memory Usage (MB)", "exec_times": "Execution Time (s)"}

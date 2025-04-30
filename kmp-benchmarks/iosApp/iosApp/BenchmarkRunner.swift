@@ -103,7 +103,7 @@ class BenchmarkRunnerImpl : BenchmarkRunner {
                     try await animationsBenchmark.runBenchmark(n: Int32(duration))
                     
                 case "IdleState":
-                    try await Task.sleep(nanoseconds: 5 * 1_000_000_000)
+                    try await Task.sleep(nanoseconds: 30 * 1_000_000_000)
 
                 default:
                     break
