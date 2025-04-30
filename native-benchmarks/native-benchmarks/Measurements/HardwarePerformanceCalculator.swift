@@ -68,6 +68,12 @@ internal extension HardwarePerformanceCalculator {
         self.startTimestamp = nil
         self.stopAndSendMetrics()
     }
+    /// Marks where an iteration starts in performance data, simplifies analysis
+    func markIteration(_ number: Int) {
+        let marker = "\n--- Iteration \(number) ---"
+        addMeasurement(marker)
+    }
+    
     /// samples time
     func sampleTime(duration: Double) {
         timeDurationsQueue.async(flags: .barrier) {

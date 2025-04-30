@@ -46,6 +46,7 @@ class CameraBenchmark(
         } else {
             performanceCalculator.start()
             for (i in 0 until n) {
+                performanceCalculator.markIteration(i)
                 try {
                     takeAndSavePhoto()
                 } catch (e: Exception) {

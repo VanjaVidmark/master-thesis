@@ -33,6 +33,7 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         } else {
             performanceCalculator.start()
             for (i in warmup until n+warmup) {
+                performanceCalculator.markIteration(i-warmup)
                 write(i, data, suffix = "write")
                 print("Measured performance: Wrote file $i \n")
             }
@@ -75,6 +76,7 @@ class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalc
         } else {
             performanceCalculator.start()
             for (i in warmup until n+warmup) {
+                performanceCalculator.markIteration(i-warmup)
                 read(indices[i], suffix = "read")
             }
             performanceCalculator.stopAndPost()

@@ -27,6 +27,7 @@ for impl in implementations:
 
     current_run_data = None
     current_run = 0
+    last_timestamp = None
 
     for line in lines:
         line = line.strip()
@@ -37,9 +38,15 @@ for impl in implementations:
             current_run_data = {
                 "timestamp": [],
                 "cpu": [],
-                "memory": []
+                "memory": [],
+                "iteration_markers": []
             }
             data[impl].append(current_run_data)
+            continue
+
+        if line.startswith("--- Iteration"):
+            if last_timestamp is not None:
+                current_run_data["iteration_markers"].append(last_timestamp)
             continue
 
         if not current_run_data or not line or line.startswith("CPU") or line.startswith("---"):
@@ -50,6 +57,7 @@ for impl in implementations:
             current_run_data["cpu"].append(cpu)
             current_run_data["memory"].append(memory)
             current_run_data["timestamp"].append(timestamp)
+            last_timestamp = timestamp  # Only update when timestamp is valid
         except ValueError:
             continue
 
@@ -58,6 +66,7 @@ for impl in implementations:
         if run_data["timestamp"]:
             base_time = run_data["timestamp"][0]
             run_data["timestamp"] = [t - base_time for t in run_data["timestamp"]]
+            run_data["iteration_markers"] = [t - base_time for t in run_data["iteration_markers"]]
 
     # Read execution times
     exec_times = []
@@ -97,6 +106,16 @@ for run_idx in range(3):
                 else:
                     if run_data["timestamp"]:
                         ax.plot(run_data["timestamp"], run_data[metric], label=impl.upper(), linewidth=1.0)
+
+                        # Plot iteration markers as red dots
+                        iteration_markers = run_data.get("iteration_markers", [])
+                        timestamps = run_data["timestamp"]
+                        values = run_data[metric]
+                        for marker_time in iteration_markers:
+                            if timestamps and values:
+                                closest_idx = min(range(len(timestamps)), key=lambda i: abs(timestamps[i] - marker_time))
+                                ax.scatter(timestamps[closest_idx], values[closest_idx], marker='o', color='red', s=30)
+
         ax.set_title(f"Run {run_idx + 1} - {metric_labels[metric]}", fontsize=10)
         ax.set_xlabel("Time (s)" if metric != "exec_times" else "Run Index", fontsize=8)
         ax.set_ylabel(metric_labels[metric], fontsize=8)

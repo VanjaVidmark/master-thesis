@@ -33,6 +33,7 @@ final class CameraBenchmark {
         } else {
             performanceCalculator.start()
             for i in 0..<n {
+                performanceCalculator.markIteration(i)
                 try? await cameraService.takeAndSavePhoto()
                 print("Saved photo \(i + 1)/\(n)")
             }

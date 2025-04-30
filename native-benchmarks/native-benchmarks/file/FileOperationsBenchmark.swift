@@ -58,6 +58,7 @@ class FileOperationsBenchmark {
         } else {
             performanceCalculator.start()
             for i in warmup..<n+warmup {
+                performanceCalculator.markIteration(i-warmup)
                 self.write(index: i, data: data, suffix: "write")
                 print("Measured performance: Wrote file \(i)")
             }
@@ -104,6 +105,7 @@ class FileOperationsBenchmark {
         } else {
             performanceCalculator.start()
             for i in warmup..<n+warmup {
+                performanceCalculator.markIteration(i-warmup)
                 autoreleasepool {
                     _ = read(index: indices[i], suffix: "read")
                 }
