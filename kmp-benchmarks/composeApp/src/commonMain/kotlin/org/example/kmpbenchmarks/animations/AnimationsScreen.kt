@@ -1,37 +1,31 @@
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import kotlinx.coroutines.isActive
-import kmp_benchmarks.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import kotlinx.datetime.Clock
-import org.example.kmpbenchmarks.animations.AnimationsController
-import org.jetbrains.compose.resources.DrawableResource
-import kotlin.math.PI
-import kotlin.math.sin
 import kotlin.random.Random
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.DrawableResource
+import kmp_benchmarks.composeapp.generated.resources.*
+import org.example.kmpbenchmarks.animations.AnimationsController
 
 data class AnimatedStar(
     val image: DrawableResource,
     val x: Float,
-    val y: Float,
-    val scaleOffset: Float,
-    val visibilityOffset: Float
+    val y: Float
 )
 
 @Composable
 fun AnimationsScreen(onDone: () -> Unit) {
     val isAnimating by AnimationsController.isAnimating.collectAsState()
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
+
     val imageResources = listOf(
         Res.drawable.star1, Res.drawable.star2, Res.drawable.star3,
         Res.drawable.star4, Res.drawable.star5, Res.drawable.star6,
@@ -39,28 +33,12 @@ fun AnimationsScreen(onDone: () -> Unit) {
     )
 
     val stars = remember {
-        List(250) {
+        List(200) {
             AnimatedStar(
                 image = imageResources.random(),
                 x = Random.nextFloat() * 1080f,
-                y = Random.nextFloat() * 2340f,
-                scaleOffset = Random.nextFloat() * 1000f,
-                visibilityOffset = Random.nextFloat() * 1000f
+                y = Random.nextFloat() * 2340f
             )
-        }
-    }
-
-    var currentTime by remember { mutableStateOf(0L) }
-
-    LaunchedEffect(isAnimating) {
-        if (!isAnimating) {
-            onDone()
-        } else {
-            val startTime = Clock.System.now()
-            while (isActive) {
-                currentTime = Clock.System.now().minus(startTime).inWholeMilliseconds
-                kotlinx.coroutines.delay(16) // ~60 FPS
-            }
         }
     }
 
@@ -71,24 +49,54 @@ fun AnimationsScreen(onDone: () -> Unit) {
     ) {
         if (isAnimating && containerSize.width > 0) {
             stars.forEach { star ->
-                val timeSec = currentTime / 1000f
-
-                val scale = 0.8f + 0.4f * sin((timeSec + star.scaleOffset / 1000f) * 2 * PI).toFloat()
-                val alpha = 0.5f + 0.5f * sin((timeSec + star.visibilityOffset / 1000f) * 2 * PI).toFloat()
-
-                Image(
-                    painter = painterResource(star.image),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .absoluteOffset { IntOffset(star.x.toInt(), star.y.toInt()) }
-                        .alpha(alpha)
-                        .graphicsLayer {
-                            scaleX = scale
-                            scaleY = scale
-                        }
-                )
+                AnimatedStarView(star = star)
             }
         }
     }
+
+    LaunchedEffect(isAnimating) {
+        if (!isAnimating) {
+            onDone()
+        }
+    }
+}
+
+@Composable
+fun AnimatedStarView(star: AnimatedStar) {
+    val infiniteTransition = rememberInfiniteTransition(label = "star-${star.hashCode()}")
+
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 500, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+            initialStartOffset = StartOffset(Random.nextInt(0, 1000))
+        ),
+        label = "alpha"
+    )
+
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 0.7f,
+        targetValue = 1.3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 500),
+            repeatMode = RepeatMode.Reverse,
+            initialStartOffset = StartOffset(Random.nextInt(0, 1000))
+        ),
+        label = "scale"
+    )
+
+    Image(
+        painter = painterResource(star.image),
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .absoluteOffset { IntOffset(star.x.toInt(), star.y.toInt()) }
+            .alpha(alpha)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+    )
 }

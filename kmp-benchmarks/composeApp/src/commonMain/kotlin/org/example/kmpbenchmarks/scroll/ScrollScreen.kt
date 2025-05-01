@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -17,8 +16,6 @@ import kotlinx.coroutines.launch
 import org.example.kmpbenchmarks.scroll.ScrollController
 import org.jetbrains.compose.resources.painterResource
 import kmp_benchmarks.composeapp.generated.resources.*
-
-import kotlin.random.Random
 
 @Composable
 fun ScrollScreen(onDone: () -> Unit) {

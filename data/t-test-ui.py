@@ -78,10 +78,6 @@ for m in metrics:
     kmp_vals = data["Kmp"][m]
     native_vals = data["Native"][m]
 
-    if m == "dropped":
-        print(len(kmp_vals))
-        print(len(native_vals))
-
     mean_kmp = np.mean(kmp_vals)
     std_kmp = np.std(kmp_vals, ddof=1)
     mean_native = np.mean(native_vals)
