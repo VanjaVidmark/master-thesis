@@ -21,18 +21,36 @@ class FileOperationsBenchmark {
 
     func write(index: Int, data: Data, suffix: String? = nil) {
         let url = fileURL(for: index, suffix: suffix)
-        try? data.write(to: url, options: .atomic)
+
+        do {
+            FileManager.default.createFile(atPath: url.path, contents: nil, attributes: nil)
+            let fileHandle = try FileHandle(forWritingTo: url)
+            defer { try? fileHandle.close()}
+            try fileHandle.write(contentsOf: data)
+            try fileHandle.synchronize()  // flushes write buffers
+        } catch {
+            print("Write error at \(url.path): \(error)")
+        }
     }
+
     
     func read(index: Int, suffix: String? = nil) -> Data? {
         let url = fileURL(for: index, suffix: suffix)
-        if !fileManager.fileExists(atPath: url.path) {
+        guard fileManager.fileExists(atPath: url.path) else {
             print("File not found: \(url.path)")
             return nil
         }
-        return try? Data(contentsOf: url)
+        
+        do {
+            let fileHandle = try FileHandle(forReadingFrom: url)
+            defer { try? fileHandle.close() }
+            return try fileHandle.readToEnd()
+        } catch {
+            print("Read error at \(url.path): \(error)")
+            return nil
+        }
     }
-    
+
     func delete(index: Int, suffix: String? = nil) {
         let url = fileURL(for: index, suffix: suffix)
         if !fileManager.fileExists(atPath: url.path) {

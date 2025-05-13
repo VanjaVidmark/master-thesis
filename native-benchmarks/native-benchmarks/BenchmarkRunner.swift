@@ -20,7 +20,7 @@ class BenchmarkRunner {
         
         self.filename = "Native\(benchmark).txt"
         
-        self.serverURL = URL(string: "http://192.168.0.86:5050/upload")
+        self.serverURL = URL(string: "http://10.0.4.44:5050/upload")
         
         switch benchmark {
         case "FileWritePerformance", "FileWriteTime", "FileReadPerformance", "FileReadTime", "CameraPerformance", "CameraTime", "PreWrite":
@@ -48,9 +48,7 @@ class BenchmarkRunner {
             switch benchmark {
             case "FileWritePerformance":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
-                performanceCalculator.start()
                 fileBenchmark.runWriteBenchmark(warmup: warmup, n: iterations, measureTime: false)
-                performanceCalculator.stopAndPost()
                 
             case "FileWriteTime":
                 let fileBenchmark = FileOperationsBenchmark(performanceCalculator: performanceCalculator)
