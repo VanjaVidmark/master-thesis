@@ -85,6 +85,7 @@ for impl in implementations:
             data[impl][i]["exec_times"] = times.tolist()
 
 # Plotting all small plots together
+'''
 fig, axs = plt.subplots(3, 3, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
 
@@ -127,3 +128,41 @@ for run_idx in range(3):
 fig.suptitle(f"{benchmark} Hardware Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
+'''
+
+# Plot only first run memory usage
+import matplotlib.pyplot as plt
+
+# Custom colors
+colors = {
+    "Kmp": "#8062f8",
+    "Native": "#f19f26"
+}
+
+# Plot only first run memory usage (prettier version)
+plt.figure(figsize=(8, 4))
+
+for impl in implementations:
+    if len(data[impl]) > 0:
+        run_data = data[impl][0]
+        timestamps = run_data["timestamp"]
+        memory = run_data["memory"]
+        if timestamps and memory:
+            plt.plot(
+                timestamps,
+                memory,
+                label=impl,
+                color=colors[impl],
+                linewidth=2.2,
+                alpha=0.9
+            )
+
+# Styling
+plt.title(f"{benchmark} - Run 1: Memory Usage", fontsize=14, pad=12)
+plt.xlabel("Time (s)", fontsize=12)
+plt.ylabel("Memory Usage (MB)", fontsize=12)
+plt.legend(fontsize=10, title_fontsize=11)
+plt.grid(True, linestyle="--", linewidth=0.5, alpha=0.7)
+plt.tight_layout()
+plt.show()
+

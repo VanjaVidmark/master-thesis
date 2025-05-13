@@ -20,7 +20,7 @@ for impl in implementations:
 
     for line in lines:
         line = line.strip()
-        if line == "--- NEW ITERATION ---":
+        if line == "--- NEW BENCHMARK RUN ---":
             # Save previous iteration data
             if start_time is not None:
                 for m in metrics:
@@ -42,7 +42,7 @@ for impl in implementations:
         if start_time is None:
             start_time = timestamp
 
-        if timestamp - start_time < 2:
+        if timestamp - start_time < 10:
             continue  # Skip first 2 seconds
 
         buffer["cpu"].append(cpu)
@@ -52,7 +52,7 @@ for impl in implementations:
         for m in metrics:
             data[impl][m].extend(buffer[m])
 
-print("\nIdle State CPU & Memory (excluding first 2 seconds of each iteration):")
+print("\nIdle State CPU & Memory (excluding first 10 seconds of each iteration):")
 print(f"{'Metric':<10} {'Impl':<8} {'Mean':>10} {'Std':>10}")
 print("-" * 40)
 

@@ -7,7 +7,7 @@ import org.example.kmpbenchmarks.getTime
 
 expect fun write(index: Int, data: ByteArray, suffix: String? = null)
 expect fun delete(index: Int, suffix: String? = null)
-expect fun read(index: Int, suffix: String? = null)
+expect fun read(index: Int, suffix: String? = null) : ByteArray?
 
 class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalculator) {
     private val sizeInMB = 100

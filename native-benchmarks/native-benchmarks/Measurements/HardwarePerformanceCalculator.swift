@@ -70,7 +70,8 @@ internal extension HardwarePerformanceCalculator {
     }
     /// Marks where an iteration starts in performance data, simplifies analysis
     func markIteration(_ number: Int) {
-        let marker = "\n--- Iteration \(number) ---"
+        let time = displayLink.timestamp
+        let marker = "\n--- Iteration \(number) @ \(time) ---"
         addMeasurement(marker)
     }
     

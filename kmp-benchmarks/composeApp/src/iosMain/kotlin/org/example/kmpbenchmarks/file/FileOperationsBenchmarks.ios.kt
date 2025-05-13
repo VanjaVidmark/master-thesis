@@ -3,9 +3,11 @@ package org.example.kmpbenchmarks.file
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.autoreleasepool
+import kotlinx.cinterop.convert
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
 import platform.Foundation.*
+import platform.posix.memcpy
 
 private fun fileURL(index: Int, suffix: String? = null): NSURL {
     val tempDir = NSTemporaryDirectory()
@@ -42,30 +44,33 @@ actual fun write(index: Int, data: ByteArray, suffix: String?) {
 }
 
 @OptIn(BetaInteropApi::class, ExperimentalForeignApi::class)
-actual fun read(index: Int, suffix: String?) {
-    autoreleasepool {
+actual fun read(index: Int, suffix: String?): ByteArray? {
+    return autoreleasepool {
         val url = fileURL(index, suffix)
 
         if (!NSFileManager.defaultManager.fileExistsAtPath(url.path ?: "")) {
             println("File #$index not found")
-            return@autoreleasepool
+            return@autoreleasepool null
         }
 
         val fileHandle = NSFileHandle.fileHandleForReadingFromURL(url, null)
         if (fileHandle == null) {
             println("Failed to open file handle for reading at ${url.path}")
-            return@autoreleasepool
+            return@autoreleasepool null
         }
 
         try {
             val data = fileHandle.readDataToEndOfFile()
+            return@autoreleasepool data.toByteArray()
         } catch (e: Exception) {
             println("Read error at ${url.path}: ${e.message}")
+            return@autoreleasepool null
         } finally {
             fileHandle.closeFile()
         }
     }
 }
+
 
 
 @OptIn(ExperimentalForeignApi::class)
@@ -85,3 +90,15 @@ fun ByteArray.toNSData(): NSData = memScoped {
         length = this@toNSData.size.toULong()
     )
 }
+
+@OptIn(ExperimentalForeignApi::class)
+fun NSData.toByteArray(): ByteArray {
+    val length = this.length.toInt()
+    val byteArray = ByteArray(length)
+    memScoped {
+        val buffer = byteArray.refTo(0).getPointer(this)
+        memcpy(buffer, this@toByteArray.bytes, length.convert())
+    }
+    return byteArray
+}
+
