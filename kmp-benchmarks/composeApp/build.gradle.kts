@@ -42,6 +42,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.datetime.v050)
+            implementation(libs.material.icons.core)
         }
         iosMain.dependencies {}
     }

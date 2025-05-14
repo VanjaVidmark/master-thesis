@@ -85,7 +85,6 @@ for impl in implementations:
             data[impl][i]["exec_times"] = times.tolist()
 
 # Plotting all small plots together
-'''
 fig, axs = plt.subplots(3, 3, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
 
@@ -128,8 +127,8 @@ for run_idx in range(3):
 fig.suptitle(f"{benchmark} Hardware Benchmark", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
-'''
 
+'''
 # Plot only first run memory usage
 import matplotlib.pyplot as plt
 
@@ -166,3 +165,4 @@ plt.grid(True, linestyle="--", linewidth=0.5, alpha=0.7)
 plt.tight_layout()
 plt.show()
 
+'''
