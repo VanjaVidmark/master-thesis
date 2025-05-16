@@ -5,6 +5,7 @@ import numpy as np
 
 benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
+run_indices = [1, 2, 3]
 
 # Each impl -> list of runs -> each run has timestamp, cpu, memory, exec_times
 data = {}
@@ -32,9 +33,11 @@ for impl in implementations:
     for line in lines:
         line = line.strip()
         if line.startswith("--- NEW BENCHMARK RUN ---"):
+
             current_run += 1
-            if current_run > 3:
-                break
+            if current_run not in run_indices:
+                continue
+
             current_run_data = {
                 "timestamp": [],
                 "cpu": [],

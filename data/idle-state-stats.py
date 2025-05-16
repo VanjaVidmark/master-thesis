@@ -64,4 +64,4 @@ for m in metrics:
             continue
         mean = np.mean(values)
         std = np.std(values, ddof=1)
-        print(f"{m:<10} {impl:<8} {mean:10.2f} {std:10.2f}")
+        print(f"{m:<10} {impl:<8} {mean:10.4f} {std:10.4f}")
