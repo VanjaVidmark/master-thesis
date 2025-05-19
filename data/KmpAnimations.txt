@@ -1,7 +1,7 @@
 
 --- NEW BENCHMARK RUN ---
 
-CPU | FPS | Dropped | Memory (MB) | Timestamp
+CPU | FPS | Delayed Frames | Memory (MB) | Timestamp
 ---
 0.2 | 1 | 0 | 55.04742431640625 | 26018.582165916672
 5.599999999999999 | 2 | 0 | 66.68804931640625 | 26018.59889183334
@@ -1413,7 +1413,7 @@ CPU | FPS | Dropped | Memory (MB) | Timestamp
 
 --- NEW BENCHMARK RUN ---
 
-CPU | FPS | Dropped | Memory (MB) | Timestamp
+CPU | FPS | Delayed Frames | Memory (MB) | Timestamp
 ---
 0.0 | 1 | 0 | 54.609947204589844 | 30696.69067795834
 25.300000000000004 | 2 | 0 | 68.39119720458984 | 30696.707353666672
@@ -2892,7 +2892,7 @@ CPU | FPS | Dropped | Memory (MB) | Timestamp
 95.9 | 48 | 0 | 104.67249298095703 | 30726.666099750008
 --- NEW BENCHMARK RUN ---
 
-CPU | FPS | Dropped | Memory (MB) | Timestamp
+CPU | FPS | Delayed Frames | Memory (MB) | Timestamp
 ---
 14.600000000000001 | 1 | 0 | 54.250572204589844 | 31553.53139345834
 14.600000000000001 | 2 | 0 | 67.98494720458984 | 31553.548062416674
@@ -4280,7 +4280,7 @@ CPU | FPS | Dropped | Memory (MB) | Timestamp
 
 --- NEW BENCHMARK RUN ---
 
-CPU | FPS | Dropped | Memory (MB) | Timestamp
+CPU | FPS | Delayed Frames | Memory (MB) | Timestamp
 ---
 4.3999999999999995 | 1 | 0 | 54.484947204589844 | 32660.373471666673
 12.7 | 2 | 0 | 68.21932220458984 | 32660.390163375007
@@ -5737,7 +5737,7 @@ CPU | FPS | Dropped | Memory (MB) | Timestamp
 98.3 | 47 | 1 | 104.40686798095703 | 32690.34651262501
 --- NEW BENCHMARK RUN ---
 
-CPU | FPS | Dropped | Memory (MB) | Timestamp
+CPU | FPS | Delayed Frames | Memory (MB) | Timestamp
 ---
 4.300000000000001 | 1 | 0 | 54.51617431640625 | 1174.4769942916669
 18.200000000000006 | 2 | 0 | 68.26617431640625 | 1174.4936802083337

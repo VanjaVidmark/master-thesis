@@ -11,9 +11,7 @@ expect fun read(index: Int, suffix: String? = null) : ByteArray?
 
 class FileOperationsBenchmark(private val performanceCalculator: PerformanceCalculator) {
     private val sizeInMB = 100
-    private val data: ByteArray = ByteArray(sizeInMB * 1024 * 1024).apply {
-        Random.nextBytes(this)
-    }
+    private val data: ByteArray = ByteArray(sizeInMB * 1024 * 1024)
 
     fun runWriteBenchmark(warmup: Int, n: Int, measureTime: Boolean) {
         for (i in 0 until warmup) {

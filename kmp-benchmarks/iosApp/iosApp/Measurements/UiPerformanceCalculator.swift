@@ -47,7 +47,7 @@ internal class UiPerformanceCalculator : PerformanceCalculator {
         self.serverURL = serverURL
         self.filename = filename
         self.configureDisplayLink()
-        self.addMeasurement("\nCPU | FPS | Dropped |Memory (MB) | Timestamp\n---")
+        self.addMeasurement("\nCPU | FPS | Delayed frames |Memory (MB) | Timestamp\n---")
     }
 }
 
@@ -93,9 +93,9 @@ private extension UiPerformanceCalculator {
     func takePerformanceEvidence(timestamp: TimeInterval) {
         let cpuUsage = self.cpuUsage()
         let fps = self.linkedFramesList.count
-        let dropped = self.droppedFrames(currentTimestamp: timestamp)
+        let delayed = self.delayedFrames(currentTimestamp: timestamp)
         let memoryUsage = self.memoryUsage()
-        let measurement = "\(cpuUsage) | \(fps) | \(dropped) | \(memoryUsage) | \(timestamp)"
+        let measurement = "\(cpuUsage) | \(fps) | \(delayed) | \(memoryUsage) | \(timestamp)"
         self.addMeasurement(measurement)
     }
 
@@ -134,15 +134,15 @@ private extension UiPerformanceCalculator {
         return totalUsageOfCPU
     }
 
-    func droppedFrames(currentTimestamp: TimeInterval) -> Int {
+    func delayedFrames(currentTimestamp: TimeInterval) -> Int {
         guard let previous = previousFrameTimestamp else {
             return 0
         }
         
         let delta = currentTimestamp - previous
-        let frameBudget = 1.0 / 60.0  // 60Hz = ~16.67ms
-        let drops = Int((delta / frameBudget).rounded(.down)) - 1
-        return max(drops, 0)
+        let frameBudget = 1.0 / 60.0
+        let delays = Int((delta / frameBudget).rounded(.down)) - 1
+        return max(delays, 0)
     }
 
     func memoryUsage() -> Double {
