@@ -97,3 +97,45 @@ for ax in axs:
 fig.suptitle(f"{benchmark} Benchmark Results", fontsize=14)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
+
+'''
+
+# === FPS Plot: Only First Run, After 10 Seconds ===
+plt.figure(figsize=(8, 4))
+colors = {
+    "Kmp": "#8062f8",
+    "Native": "#f19f26"
+}
+
+for impl in implementations:
+    if len(data[impl]) > 0:
+        run_data = data[impl][0]  # First run only
+        timestamps = run_data["timestamp"]
+        fps_values = run_data["fps"]
+
+        if timestamps and fps_values:
+            # Normalize timestamps
+            base_time = timestamps[0]
+            normalized_timestamps = [t - base_time for t in timestamps]
+
+            # Filter out first 10 seconds
+            filtered = [(t, f) for t, f in zip(normalized_timestamps, fps_values) if t >= 10.0]
+            if filtered:
+                filtered_timestamps, filtered_fps = zip(*filtered)
+                plt.plot(
+                    filtered_timestamps,
+                    filtered_fps,
+                    label=impl,
+                    color=colors[impl],
+                    linewidth=2.2,
+                    alpha=0.9
+                )
+
+plt.title(f"Multiple {benchmark} - Run 1: FPS", fontsize=14, pad=12)
+plt.xlabel("Time (s)", fontsize=12)
+plt.ylabel("FPS", fontsize=12)
+plt.legend(fontsize=10, title_fontsize=11)
+plt.grid(True, linestyle="--", linewidth=0.5, alpha=0.7)
+plt.tight_layout()
+plt.show()
+'''

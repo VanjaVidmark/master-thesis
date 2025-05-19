@@ -18,7 +18,7 @@ struct VisibilityScreen: View {
     var body: some View {
         ZStack {
             if controller.isRunning {
-                Image("img10mb")
+                Image("scroll10")
                     .resizable()
                     .scaledToFill()
                     .opacity(opacity)

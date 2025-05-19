@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.example.kmpbenchmarks.scroll.ScrollController
 import org.jetbrains.compose.resources.painterResource
 import kmp_benchmarks.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.DrawableResource
 
 @Composable
 fun ScrollScreen(onDone: () -> Unit) {
@@ -62,24 +63,34 @@ fun ScrollScreen(onDone: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(100) { index ->
-            val randomImage = remember { images.random() }
-            
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 16.dp)
-            ) {
-                Image(
-                    painter = painterResource(randomImage),
-                    contentDescription = "Item image",
-                    modifier = Modifier
-                        .size(width = 600.dp, height = 400.dp),
-                    contentScale = ContentScale.Fit
-                )
-                Text(
-                    text = "Item $index",
-                    modifier = Modifier.padding(top = 16.dp, bottom = 24.dp)
-                )
-            }
+            ScrollItem(index = index, images = images)
         }
     }
 }
+
+@Composable
+fun ScrollItem(index: Int, images: List<DrawableResource>) {
+    var image by remember { mutableStateOf(images.random()) }
+
+    LaunchedEffect(Unit) {
+        image = images.random()
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(vertical = 16.dp)
+    ) {
+        Image(
+            painter = painterResource(image),
+            contentDescription = "image",
+            modifier = Modifier
+                .size(width = 600.dp, height = 400.dp),
+            contentScale = ContentScale.Fit
+        )
+        Text(
+            text = "Item $index",
+            modifier = Modifier.padding(top = 16.dp, bottom = 24.dp)
+        )
+    }
+}
+

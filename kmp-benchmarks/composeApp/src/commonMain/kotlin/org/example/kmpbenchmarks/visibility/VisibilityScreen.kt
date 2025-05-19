@@ -7,7 +7,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import kmp_benchmarks.composeapp.generated.resources.*
-import kmp_benchmarks.composeapp.generated.resources.img10mb
+import kmp_benchmarks.composeapp.generated.resources.scroll10
 import org.example.kmpbenchmarks.visibility.VisibilityController
 
 @Composable
@@ -27,7 +27,7 @@ fun VisibilityScreen(onDone: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         if (isRunning) {
             Image(
-                painter = painterResource(Res.drawable.img10mb),
+                painter = painterResource(Res.drawable.scroll10),
                 contentDescription = "Example Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
