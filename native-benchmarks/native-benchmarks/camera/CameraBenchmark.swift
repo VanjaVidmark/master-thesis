@@ -1,3 +1,10 @@
+//
+//  CameraBenchmark.swift
+//  native-benchmarks
+//
+//  Created by Vanja Vidmark on 2025-04-23.
+//
+
 import Foundation
 
 final class CameraBenchmark {

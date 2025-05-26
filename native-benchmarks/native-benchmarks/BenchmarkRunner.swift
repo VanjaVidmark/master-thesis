@@ -20,7 +20,7 @@ class BenchmarkRunner {
         
         self.filename = "Native\(benchmark).txt"
         
-        self.serverURL = URL(string: "http://10.0.4.44:5050/upload")
+        self.serverURL = URL(string: "http://192.168.0.86:5050/upload")
         
         switch benchmark {
         case "FileWritePerformance", "FileWriteTime", "FileReadPerformance", "FileReadTime", "CameraPerformance", "CameraTime", "PreWrite":

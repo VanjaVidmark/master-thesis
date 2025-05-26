@@ -7,7 +7,6 @@ benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 run_indices = [1, 2, 3]
 
-# Each impl -> list of runs -> each run has timestamp, cpu, memory, exec_times
 data = {}
 
 for impl in implementations:
@@ -60,18 +59,16 @@ for impl in implementations:
             current_run_data["cpu"].append(cpu)
             current_run_data["memory"].append(memory)
             current_run_data["timestamp"].append(timestamp)
-            last_timestamp = timestamp  # Only update when timestamp is valid
+            last_timestamp = timestamp
         except ValueError:
             continue
 
-    # Normalize timestamps for each run
     for run_data in data[impl]:
         if run_data["timestamp"]:
             base_time = run_data["timestamp"][0]
             run_data["timestamp"] = [t - base_time for t in run_data["timestamp"]]
             run_data["iteration_markers"] = [t - base_time for t in run_data["iteration_markers"]]
 
-    # Read execution times
     exec_times = []
     with open(time_filename, "r") as file:
         for line in file:
@@ -81,13 +78,12 @@ for impl in implementations:
             except ValueError:
                 continue
 
-    # Slice exec_times per run (assuming roughly equal splits)
     split_exec_times = np.array_split(exec_times, min(3, len(exec_times)))
     for i, times in enumerate(split_exec_times):
         if i < len(data[impl]):
             data[impl][i]["exec_times"] = times.tolist()
 
-# Plotting all small plots together
+# THREE RUNS, SMALL PLOTS
 fig, axs = plt.subplots(3, 3, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
 
@@ -132,16 +128,13 @@ plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 plt.show()
 
 '''
-# Plot only first run memory usage
-import matplotlib.pyplot as plt
+# ONE RUN, MEMORY USAGE, for report
 
-# Custom colors
 colors = {
     "Kmp": "#8062f8",
     "Native": "#f19f26"
 }
 
-# Plot only first run memory usage (prettier version)
 plt.figure(figsize=(8, 4))
 
 for impl in implementations:
@@ -159,7 +152,6 @@ for impl in implementations:
                 alpha=0.9
             )
 
-# Styling
 plt.title(f"{benchmark} - Run 1: Memory Usage", fontsize=14, pad=12)
 plt.xlabel("Time (s)", fontsize=12)
 plt.ylabel("Memory Usage (MB)", fontsize=12)

@@ -7,7 +7,6 @@ benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 metrics = ["cpu", "fps", "dropped", "memory"]
 
-# initialize nested dictionary for all data
 data = {}
 for impl in implementations:
     data[impl] = {}
@@ -22,14 +21,14 @@ for impl in implementations:
     with open(filename, "r") as f:
         lines = f.readlines()
 
-    start_time = None  # timestamp of first sample per run (to discard warmup)
+    start_time = None
     frame_drops_per_second = {}  
 
     for line in lines:
         line = line.strip()
 
         if line == "--- NEW BENCHMARK RUN ---":
-            # When starting a new run, write all calculated fame drops per second to data
+            # when starting a new run, write all calculated fame drops per second to data
             if frame_drops_per_second:
                 for second in sorted(frame_drops_per_second.keys()):
                     data[impl]["dropped"].append(frame_drops_per_second[second])
@@ -46,12 +45,12 @@ for impl in implementations:
         except ValueError:
             continue
 
-        # If first row of the benchmark run
+        # If first row of the benchmark run, reset
         if start_time is None:
             start_time = timestamp
 
         if timestamp - start_time < 10:
-            continue  # Skip warmup first 10 seconds
+            continue  # skip warmup first 10 seconds
 
         # Adds number of frame drops during each second
         second = int(timestamp - start_time)
@@ -63,7 +62,7 @@ for impl in implementations:
         data[impl]["fps"].append(fps)
         data[impl]["memory"].append(memory)
 
-    # Finalize last benchmark run (in case it doesnt end at a whole second)
+    # finalize last benchmark run (in case it doesnt end at a whole second)
     if frame_drops_per_second:
         for second in sorted(frame_drops_per_second.keys()):
             data[impl]["dropped"].append(frame_drops_per_second[second])

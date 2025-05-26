@@ -1,3 +1,10 @@
+//
+//  FileOperationsBenchmark.swift
+//  native-benchmarks
+//
+//  Created by Vanja Vidmark on 2025-04-15.
+//
+
 import Foundation
 
 class FileOperationsBenchmark {

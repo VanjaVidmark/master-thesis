@@ -7,7 +7,6 @@ benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 metrics = ["cpu", "memory", "exec_time"]
 
-# initialize nested dictionary for all data
 data = {}
 for impl in implementations:
     data[impl] = {}
@@ -19,16 +18,13 @@ for impl in implementations:
     perf_filename = f"{impl}{benchmark}Performance.txt"
     time_filename = f"{impl}{benchmark}Time.txt"
 
-    # Handle CPU and memory data
-
     if not os.path.isfile(perf_filename):
         raise FileNotFoundError(f"Could not find file: {perf_filename}")
 
     with open(perf_filename, "r") as f:
         for line in f:
             line = line.strip()
-            # Skip lines not containing data
-            if not line or line.startswith("---") or line.startswith("CPU"):
+            if not line or line.startswith("---") or line.startswith("CPU"): # skip lines no data
                 continue
             try:
                 cpu, memory, _ = map(float, line.split("|"))
@@ -36,8 +32,6 @@ for impl in implementations:
                 data[impl]["memory"].append(memory)
             except ValueError:
                 continue
-
-    # Handle time data
 
     if not os.path.isfile(time_filename):
         raise FileNotFoundError(f"Could not find file: {time_filename}")

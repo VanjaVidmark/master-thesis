@@ -21,11 +21,9 @@ for impl in implementations:
     for line in lines:
         line = line.strip()
         if line == "--- NEW BENCHMARK RUN ---":
-            # Save previous iteration data
             if start_time is not None:
                 for m in metrics:
                     data[impl][m].extend(buffer[m])
-            # Reset for new iteration
             in_iteration = True
             start_time = None
             buffer = {m: [] for m in metrics}
@@ -43,7 +41,7 @@ for impl in implementations:
             start_time = timestamp
 
         if timestamp - start_time < 10:
-            continue  # Skip first 2 seconds
+            continue
 
         buffer["cpu"].append(cpu)
         buffer["memory"].append(memory)

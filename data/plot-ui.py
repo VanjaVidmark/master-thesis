@@ -7,7 +7,6 @@ benchmark = sys.argv[1]
 implementations = ["Kmp", "Native"]
 run_indices = [3, 4, 5]
 
-# Each impl -> list of runs -> each run has timestamp, cpu, fps, dropped, ram
 data = {}
 
 for impl in implementations:
@@ -62,7 +61,7 @@ for impl in implementations:
             except ValueError:
                 continue
 
-# Now plot all runs together
+# PLOT THREE RUNS
 
 fig, axs = plt.subplots(3, 4, figsize=(15, 8), sharex=False)
 axs = axs.flatten()
@@ -100,7 +99,7 @@ plt.show()
 
 '''
 
-# === FPS Plot: Only First Run, After 10 Seconds ===
+# FPS Plot, Only First Run, After 10 Seconds, for report
 plt.figure(figsize=(8, 4))
 colors = {
     "Kmp": "#8062f8",

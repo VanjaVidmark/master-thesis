@@ -1,3 +1,10 @@
+//
+//  ContentView.swift
+//  native-benchmarks
+//
+//  Created by Vanja Vidmark on 2025-02-27.
+//
+
 import SwiftUI
 
 struct ContentView: View {
@@ -24,10 +31,10 @@ struct ContentView: View {
             default:
                 TabView(selection: $selectedTab) {
                     
-                    // MARK: Hardware Tab
+                    /// Hardware Tab
                     VStack(spacing: 20) {
                         
-                        // MARK: Execution times
+                        /// Execution times
                         Text("Measure execution times")
                         
                         Button("Run File Read Benchmark") {
@@ -45,7 +52,7 @@ struct ContentView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         
-                        // MARK: Performance
+                        /// Performance
                         Text("Measure CPU and memory")
                         
                         Button("Run File Read Benchmark") {
@@ -71,7 +78,7 @@ struct ContentView: View {
                         Label("Hardware", systemImage: "phone")
                     }
 
-                    // UI Tab
+                    /// UI Tab
                     VStack(spacing: 20) {
                         Button("Run Scroll Benchmark") {
                             currentScreen = "Scroll"
@@ -98,7 +105,7 @@ struct ContentView: View {
                         Label("UI", systemImage: "person")
                     }
 
-                    // Other Tab
+                    /// Other Tab
                     VStack(spacing: 20) {
                         Button("Request all necessary permissions") {
                             benchmarkRunner.run(benchmark: "RequestPermissions")
