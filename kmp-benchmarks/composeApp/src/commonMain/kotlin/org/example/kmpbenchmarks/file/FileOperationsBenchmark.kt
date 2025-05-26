@@ -1,8 +1,6 @@
 package org.example.kmpbenchmarks.file
 
 import org.example.kmpbenchmarks.PerformanceCalculator
-import kotlin.random.Random
-import kotlinx.datetime.Clock
 import org.example.kmpbenchmarks.getTime
 
 expect fun write(index: Int, data: ByteArray, suffix: String? = null)

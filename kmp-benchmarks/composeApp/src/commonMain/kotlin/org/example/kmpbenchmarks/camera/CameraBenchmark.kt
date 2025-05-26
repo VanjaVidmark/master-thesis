@@ -1,6 +1,5 @@
 package org.example.kmpbenchmarks.camera
 
-import kotlinx.datetime.Clock
 import org.example.kmpbenchmarks.PerformanceCalculator
 import org.example.kmpbenchmarks.getTime
 
